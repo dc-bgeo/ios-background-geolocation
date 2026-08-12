@@ -637,6 +637,57 @@
             ]
           },
           {
+            "kind": "Var",
+            "name": "wakeHoldActive",
+            "printedName": "wakeHoldActive",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "c:@M@BGeoCore@objc(cs)BGGeoSessionStream(py)wakeHoldActive",
+            "mangledName": "$s8BGeoCore18BGGeoSessionStreamC14wakeHoldActiveSbvp",
+            "moduleName": "BGeoCore",
+            "declAttributes": [
+              "HasInitialValue",
+              "Final",
+              "HasStorage",
+              "SetterAccess",
+              "AccessControl",
+              "ObjC"
+            ],
+            "hasStorage": true,
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "c:@M@BGeoCore@objc(cs)BGGeoSessionStream(im)wakeHoldActive",
+                "mangledName": "$s8BGeoCore18BGGeoSessionStreamC14wakeHoldActiveSbvg",
+                "moduleName": "BGeoCore",
+                "implicit": true,
+                "declAttributes": [
+                  "Final",
+                  "ObjC"
+                ],
+                "accessorKind": "get"
+              }
+            ]
+          },
+          {
             "kind": "Function",
             "name": "updateServiceSession",
             "printedName": "updateServiceSession(authorizedAlways:)",
@@ -693,6 +744,51 @@
               "AccessControl",
               "ObjC",
               "RawDocComment"
+            ],
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "beginWakeBackgroundActivityHold",
+            "printedName": "beginWakeBackgroundActivityHold()",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "c:@M@BGeoCore@objc(cs)BGGeoSessionStream(im)beginWakeBackgroundActivityHold",
+            "mangledName": "$s8BGeoCore18BGGeoSessionStreamC31beginWakeBackgroundActivityHoldyyF",
+            "moduleName": "BGeoCore",
+            "declAttributes": [
+              "Final",
+              "AccessControl",
+              "ObjC",
+              "RawDocComment"
+            ],
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "endWakeBackgroundActivityHold",
+            "printedName": "endWakeBackgroundActivityHold()",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "c:@M@BGeoCore@objc(cs)BGGeoSessionStream(im)endWakeBackgroundActivityHold",
+            "mangledName": "$s8BGeoCore18BGGeoSessionStreamC29endWakeBackgroundActivityHoldyyF",
+            "moduleName": "BGeoCore",
+            "declAttributes": [
+              "Final",
+              "AccessControl",
+              "ObjC"
             ],
             "funcSelfKind": "NonMutating"
           },
@@ -769,6 +865,29 @@
               "Final",
               "AccessControl",
               "ObjC"
+            ],
+            "funcSelfKind": "NonMutating"
+          },
+          {
+            "kind": "Function",
+            "name": "stopDelivery",
+            "printedName": "stopDelivery()",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Void",
+                "printedName": "()"
+              }
+            ],
+            "declKind": "Func",
+            "usr": "c:@M@BGeoCore@objc(cs)BGGeoSessionStream(im)stopDelivery",
+            "mangledName": "$s8BGeoCore18BGGeoSessionStreamC12stopDeliveryyyF",
+            "moduleName": "BGeoCore",
+            "declAttributes": [
+              "Final",
+              "AccessControl",
+              "ObjC",
+              "RawDocComment"
             ],
             "funcSelfKind": "NonMutating"
           },
@@ -923,35 +1042,42 @@
     {
       "filePath": "\/Users\/dc\/projects\/bgeo\/core\/ios\/Sources\/BGGeoSessionStream.swift",
       "kind": "BooleanLiteral",
-      "offset": 1304,
+      "offset": 1716,
       "length": 5,
       "value": "false"
     },
     {
       "filePath": "\/Users\/dc\/projects\/bgeo\/core\/ios\/Sources\/BGGeoSessionStream.swift",
       "kind": "BooleanLiteral",
-      "offset": 1604,
+      "offset": 2016,
       "length": 5,
       "value": "false"
     },
     {
       "filePath": "\/Users\/dc\/projects\/bgeo\/core\/ios\/Sources\/BGGeoSessionStream.swift",
       "kind": "BooleanLiteral",
-      "offset": 1977,
+      "offset": 2389,
       "length": 5,
       "value": "false"
     },
     {
       "filePath": "\/Users\/dc\/projects\/bgeo\/core\/ios\/Sources\/BGGeoSessionStream.swift",
       "kind": "BooleanLiteral",
-      "offset": 2044,
+      "offset": 2456,
       "length": 5,
       "value": "false"
     },
     {
       "filePath": "\/Users\/dc\/projects\/bgeo\/core\/ios\/Sources\/BGGeoSessionStream.swift",
       "kind": "BooleanLiteral",
-      "offset": 2111,
+      "offset": 2523,
+      "length": 5,
+      "value": "false"
+    },
+    {
+      "filePath": "\/Users\/dc\/projects\/bgeo\/core\/ios\/Sources\/BGGeoSessionStream.swift",
+      "kind": "BooleanLiteral",
+      "offset": 2584,
       "length": 5,
       "value": "false"
     }

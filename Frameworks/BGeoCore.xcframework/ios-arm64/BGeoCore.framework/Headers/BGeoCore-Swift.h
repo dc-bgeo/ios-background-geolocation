@@ -407,9 +407,13 @@ SWIFT_CLASS_NAMED("BGGeoSessionStream")
 @property (nonatomic, readonly) BOOL foregroundBorn;
 @property (nonatomic, readonly) BOOL serviceSessionActive;
 @property (nonatomic, readonly) BOOL serviceSessionAlways;
+@property (nonatomic, readonly) BOOL wakeHoldActive;
 - (void)updateServiceSessionWithAuthorizedAlways:(BOOL)authorizedAlways;
 - (void)updateBackgroundActivityWithNeeded:(BOOL)needed;
+- (void)beginWakeBackgroundActivityHold;
+- (void)endWakeBackgroundActivityHold;
 - (void)startWithForegroundBorn:(BOOL)foregroundBorn authorizedAlways:(BOOL)authorizedAlways backgroundActivity:(BOOL)backgroundActivity onLocation:(void (^ _Nonnull)(CLLocation * _Nonnull))onLocation onStationary:(void (^ _Nonnull)(void))onStationary;
+- (void)stopDelivery;
 - (void)stop;
 - (nonnull instancetype)init OBJC_DESIGNATED_INITIALIZER;
 @end
