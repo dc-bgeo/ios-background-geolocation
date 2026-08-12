@@ -35,7 +35,7 @@ The closed engine (`BGeoCore.xcframework`) is vendored in this repository, so
 there is nothing else to download, no checksum to keep in step, and no release
 asset that can go missing years from now. It costs roughly 0.9 MB of git
 history per engine release — a deliberate trade for the simplest possible
-consumer story. Full documentation: <https://bgeo.dev/docs/>.
+consumer story. Full documentation: <https://bgeo.dev/docs/?utm_source=github&utm_medium=readme&utm_campaign=ios>.
 
 ### Toolchain requirement
 
@@ -49,8 +49,8 @@ The floor moves with each engine release — it is whatever Xcode built the
 binary. `Frameworks/BGeoCore.xcframework/*/Modules/*.swiftmodule/*.swiftinterface`
 records it on the `swift-compiler-version` line, and CI checks it explicitly.
 
-If that floor is too high for your team, the [React Native](https://bgeo.dev/docs/react-native/)
-and [Flutter](https://bgeo.dev/docs/flutter/) SDKs ship the same engine and are
+If that floor is too high for your team, the [React Native](https://bgeo.dev/docs/react-native/?utm_source=github&utm_medium=readme&utm_campaign=ios)
+and [Flutter](https://bgeo.dev/docs/flutter/?utm_source=github&utm_medium=readme&utm_campaign=ios) SDKs ship the same engine and are
 not affected — their binary is consumed through a bridge built against your own
 toolchain.
 
