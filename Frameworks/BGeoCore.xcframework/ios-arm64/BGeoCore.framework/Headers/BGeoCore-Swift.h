@@ -406,6 +406,7 @@ SWIFT_CLASS_NAMED("BGGeoSessionStream")
 @property (nonatomic, readonly) BOOL backgroundActivityActive;
 @property (nonatomic, readonly) BOOL foregroundBorn;
 @property (nonatomic, readonly) BOOL serviceSessionActive;
+@property (nonatomic, readonly) BOOL deliveryPaused;
 @property (nonatomic, readonly) BOOL serviceSessionAlways;
 @property (nonatomic, readonly) BOOL wakeHoldActive;
 - (void)updateServiceSessionWithAuthorizedAlways:(BOOL)authorizedAlways;
@@ -413,6 +414,9 @@ SWIFT_CLASS_NAMED("BGGeoSessionStream")
 - (void)beginWakeBackgroundActivityHold;
 - (void)endWakeBackgroundActivityHold;
 - (void)startWithForegroundBorn:(BOOL)foregroundBorn authorizedAlways:(BOOL)authorizedAlways backgroundActivity:(BOOL)backgroundActivity onLocation:(void (^ _Nonnull)(CLLocation * _Nonnull))onLocation onStationary:(void (^ _Nonnull)(void))onStationary;
+- (BOOL)restartDeliveryKeepingSessionsOnLocation:(void (^ _Nonnull)(CLLocation * _Nonnull))onLocation onStationary:(void (^ _Nonnull)(void))onStationary SWIFT_WARN_UNUSED_RESULT;
+- (void)pauseDelivery;
+- (BOOL)resumeDeliveryOnLocation:(void (^ _Nonnull)(CLLocation * _Nonnull))onLocation onStationary:(void (^ _Nonnull)(void))onStationary SWIFT_WARN_UNUSED_RESULT;
 - (void)stopDelivery;
 - (void)stop;
 - (nonnull instancetype)init OBJC_DESIGNATED_INITIALIZER;

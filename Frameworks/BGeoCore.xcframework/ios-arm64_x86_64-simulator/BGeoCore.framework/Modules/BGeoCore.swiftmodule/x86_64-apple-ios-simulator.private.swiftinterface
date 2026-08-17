@@ -34,6 +34,9 @@ import _SwiftConcurrencyShims
   @objc final public var serviceSessionActive: Swift.Bool {
     get
   }
+  @objc final public var deliveryPaused: Swift.Bool {
+    get
+  }
   @objc final public var serviceSessionAlways: Swift.Bool {
     get
   }
@@ -45,6 +48,9 @@ import _SwiftConcurrencyShims
   @objc final public func beginWakeBackgroundActivityHold()
   @objc final public func endWakeBackgroundActivityHold()
   @objc final public func start(foregroundBorn: Swift.Bool, authorizedAlways: Swift.Bool, backgroundActivity: Swift.Bool, onLocation: @escaping (_LocationEssentials.CLLocation) -> Swift.Void, onStationary: @escaping () -> Swift.Void)
+  @objc final public func restartDeliveryKeepingSessions(onLocation: @escaping (_LocationEssentials.CLLocation) -> Swift.Void, onStationary: @escaping () -> Swift.Void) -> Swift.Bool
+  @objc final public func pauseDelivery()
+  @objc final public func resumeDelivery(onLocation: @escaping (_LocationEssentials.CLLocation) -> Swift.Void, onStationary: @escaping () -> Swift.Void) -> Swift.Bool
   @objc final public func stopDelivery()
   @objc final public func stop()
   @objc override dynamic public init()
