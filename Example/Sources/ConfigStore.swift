@@ -88,10 +88,11 @@ public final class ConfigStore: ObservableObject {
     /// path below uses).
     public func merged(into base: Config) -> Config {
         var config = base
-        for (key, value) in overrides where !key.hasPrefix("notification.") {
+        for (key, value) in overrides where !key.hasPrefix("notification.") && !key.hasPrefix("crashDetection.") {
             Self.apply(key: key, rawValue: value, into: &config)
         }
         config.notification = overlayNotificationOverrides(onto: config.notification)
+        config.crashDetection = overlayCrashDetectionOverrides(onto: config.crashDetection)
         return config
     }
 
@@ -116,6 +117,8 @@ public final class ConfigStore: ObservableObject {
         var patch = Config()
         if key.hasPrefix("notification.") {
             patch.notification = fullNotificationPatch(source: overrides)
+        } else if key.hasPrefix("crashDetection.") {
+            patch.crashDetection = fullCrashDetectionPatch(source: overrides)
         } else {
             Self.apply(key: key, rawValue: overrides[key] as Any, into: &patch)
         }
@@ -125,11 +128,16 @@ public final class ConfigStore: ObservableObject {
     private func resetPatch(for keys: [String]) -> Config {
         var patch = Config()
         var rebuiltNotification = false
+        var rebuiltCrashDetection = false
         for key in keys {
             if key.hasPrefix("notification.") {
                 guard !rebuiltNotification else { continue }
                 rebuiltNotification = true
                 patch.notification = fullNotificationPatch(source: [:])
+            } else if key.hasPrefix("crashDetection.") {
+                guard !rebuiltCrashDetection else { continue }
+                rebuiltCrashDetection = true
+                patch.crashDetection = fullCrashDetectionPatch(source: [:])
             } else if let defaultValue = configDefault(for: key) {
                 Self.apply(key: key, rawValue: defaultValue.any, into: &patch)
             }
@@ -172,6 +180,39 @@ public final class ConfigStore: ObservableObject {
         case "smallIcon": Self.set(&notification.smallIcon, ConfigCoerce.string(raw))
         case "color": Self.set(&notification.color, ConfigCoerce.string(raw))
         case "priority": Self.set(&notification.priority, ConfigCoerce.int(raw))
+        default: break
+        }
+    }
+
+    /// `merged(into:)`'s crashDetection handling: only touches the dot-keys
+    /// this store actually has an override for.
+    private func overlayCrashDetectionOverrides(onto base: CrashDetectionConfig?) -> CrashDetectionConfig? {
+        let overriddenKeys = configKeys(withPrefix: "crashDetection.").filter { overrides[$0] != nil }
+        guard !overriddenKeys.isEmpty else { return base }
+        var crashDetection = base ?? CrashDetectionConfig()
+        for key in overriddenKeys {
+            guard let raw = overrides[key] else { continue }
+            assignCrashDetectionField(String(key.dropFirst("crashDetection.".count)), raw, into: &crashDetection)
+        }
+        return crashDetection
+    }
+
+    /// Live-push/reset's crashDetection handling: rebuilds EVERY field from
+    /// `source` (override if present, else the schema default).
+    private func fullCrashDetectionPatch(source: [String: Any]) -> CrashDetectionConfig {
+        var crashDetection = CrashDetectionConfig()
+        for key in configKeys(withPrefix: "crashDetection.") {
+            guard let raw = source[key] ?? configDefault(for: key)?.any else { continue }
+            assignCrashDetectionField(String(key.dropFirst("crashDetection.".count)), raw, into: &crashDetection)
+        }
+        return crashDetection
+    }
+
+    private func assignCrashDetectionField(_ sub: String, _ raw: Any, into crashDetection: inout CrashDetectionConfig) {
+        switch sub {
+        case "enabled": Self.set(&crashDetection.enabled, ConfigCoerce.bool(raw))
+        case "minSpeed": Self.set(&crashDetection.minSpeed, ConfigCoerce.double(raw))
+        case "impactThreshold": Self.set(&crashDetection.impactThreshold, ConfigCoerce.double(raw))
         default: break
         }
     }
@@ -244,7 +285,7 @@ public final class ConfigStore: ObservableObject {
         case "geofenceProximityRadius": set(&config.geofenceProximityRadius, ConfigCoerce.double(rawValue))
         case "maxMonitoredGeofences": set(&config.maxMonitoredGeofences, ConfigCoerce.int(rawValue))
         case "geofenceInitialTriggerEntry": set(&config.geofenceInitialTriggerEntry, ConfigCoerce.bool(rawValue))
-        default: break // notification.* is handled by the caller; unknown keys are ignored.
+        default: break // notification.*/crashDetection.* are handled by the caller; unknown keys are ignored.
         }
     }
 }

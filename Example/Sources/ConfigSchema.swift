@@ -335,6 +335,11 @@ public let configSections: [ConfigSection] = [
         ConfigField(key: "maxMonitoredGeofences", label: "Max monitored", type: .number, defaultValue: .int(-1), hint: "-1 = platform budget"),
         ConfigField(key: "geofenceInitialTriggerEntry", label: "Initial ENTER trigger", type: .bool, defaultValue: .bool(true)),
     ]),
+    ConfigSection("Crash detection", [
+        ConfigField(key: "crashDetection.enabled", label: "Crash detection", type: .bool, defaultValue: .bool(false)),
+        ConfigField(key: "crashDetection.minSpeed", label: "Crash min speed", type: .number, defaultValue: .double(11.11), unit: "m/s"),
+        ConfigField(key: "crashDetection.impactThreshold", label: "Crash impact threshold", type: .number, defaultValue: .double(4), unit: "g"),
+    ]),
     ConfigSection("Application", [
         ConfigField(key: "heartbeatInterval", label: "Heartbeat interval", type: .number, defaultValue: .int(60), unit: "s"),
         ConfigField(key: "stopOnTerminate", label: "Stop on terminate", type: .bool, defaultValue: .bool(true)),

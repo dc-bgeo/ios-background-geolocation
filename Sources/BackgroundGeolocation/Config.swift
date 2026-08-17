@@ -92,6 +92,37 @@ public struct AuthorizationConfig {
     public static let clear = AuthorizationConfig(strategy: Config.clearString)
 }
 
+/// On-device collision detection. Off by default. When enabled, the engine
+/// samples the accelerometer at ~50 Hz while moving and emits a `crash` event
+/// when an impact signature (>= impactThreshold g, sustained, multi-axis,
+/// pre-impact speed >= minSpeed) is followed by a speed collapse.
+public struct CrashDetectionConfig {
+    /// default false
+    public var enabled: Bool?
+    /// Pre-impact speed gate in m/s. Default 11.11 (40 km/h).
+    public var minSpeed: Double?
+    /// Impact peak threshold in g. Default 4.0.
+    public var impactThreshold: Double?
+
+    public init(
+        enabled: Bool? = nil,
+        minSpeed: Double? = nil,
+        impactThreshold: Double? = nil
+    ) {
+        self.enabled = enabled
+        self.minSpeed = minSpeed
+        self.impactThreshold = impactThreshold
+    }
+
+    public func toDictionary() -> [String: Any] {
+        var dictionary: [String: Any] = [:]
+        if let enabled { dictionary["enabled"] = enabled }
+        if let minSpeed { dictionary["minSpeed"] = minSpeed }
+        if let impactThreshold { dictionary["impactThreshold"] = impactThreshold }
+        return dictionary
+    }
+}
+
 /// Mirrors `interface Config` in `react-native/src/types.ts` (the cross-SDK
 /// source of truth for all four front-ends) property-for-property. Guarded
 /// against drift by `ConfigDriftTests`.
@@ -222,6 +253,8 @@ public struct Config {
     /// Requests a synthetic ENTER for geofences already-inside on registration
     /// (iOS requestStateForRegion / Android INITIAL_TRIGGER_ENTER). Default true.
     public var geofenceInitialTriggerEntry: Bool?
+    /// On-device collision detection. Off by default. See `CrashDetectionConfig`.
+    public var crashDetection: CrashDetectionConfig?
 
     public init(
         locationAuthorizationRequest: String? = nil,
@@ -280,7 +313,8 @@ public struct Config {
         useSessionEngine: Bool? = nil,
         geofenceProximityRadius: Double? = nil,
         maxMonitoredGeofences: Int? = nil,
-        geofenceInitialTriggerEntry: Bool? = nil
+        geofenceInitialTriggerEntry: Bool? = nil,
+        crashDetection: CrashDetectionConfig? = nil
     ) {
         self.locationAuthorizationRequest = locationAuthorizationRequest
         self.locationAuthorizationAlert = locationAuthorizationAlert
@@ -339,6 +373,7 @@ public struct Config {
         self.geofenceProximityRadius = geofenceProximityRadius
         self.maxMonitoredGeofences = maxMonitoredGeofences
         self.geofenceInitialTriggerEntry = geofenceInitialTriggerEntry
+        self.crashDetection = crashDetection
     }
 
     /// `setConfig` is a PATCH: this OMITS every `nil` property so an
@@ -418,6 +453,7 @@ public struct Config {
         if let geofenceProximityRadius { dictionary["geofenceProximityRadius"] = geofenceProximityRadius }
         if let maxMonitoredGeofences { dictionary["maxMonitoredGeofences"] = maxMonitoredGeofences }
         if let geofenceInitialTriggerEntry { dictionary["geofenceInitialTriggerEntry"] = geofenceInitialTriggerEntry }
+        if let crashDetection { dictionary["crashDetection"] = crashDetection.toDictionary() }
 
         return dictionary
     }

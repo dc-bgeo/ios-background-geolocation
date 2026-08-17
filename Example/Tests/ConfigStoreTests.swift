@@ -331,10 +331,10 @@ final class ConfigStoreTests: XCTestCase {
         XCTAssertEqual(ConfigCoerce.displayString(for: 7), "7")
     }
 
-    // MARK: - drift guard: every non-notification schema key maps to a real
-    // Config property, exercised through the actual ConfigStore.apply switch
-    // (not asserted by inspection — this is a live round-trip test, so a
-    // missing/mistyped switch case fails it).
+    // MARK: - drift guard: every non-notification/non-crashDetection schema
+    // key maps to a real Config property, exercised through the actual
+    // ConfigStore.apply switch (not asserted by inspection — this is a live
+    // round-trip test, so a missing/mistyped switch case fails it).
 
     func testEveryNonNotificationSchemaKeyRoundTripsThroughMerged() async throws {
         let store = makeStore()
@@ -371,6 +371,25 @@ final class ConfigStoreTests: XCTestCase {
         }
     }
 
+    func testEveryCrashDetectionSchemaKeyRoundTripsThroughMerged() async throws {
+        let store = makeStore()
+        let crashDetectionFields = configSections.first(where: { $0.title == "Crash detection" })!.fields
+        var expected: [String: Any] = [:]
+        for field in crashDetectionFields {
+            let value = Self.distinctOverride(for: field)
+            try await store.setOverride(field.key, value)
+            expected[field.key] = value
+        }
+
+        let crashDetection = store.merged(into: Config()).crashDetection
+        let dictionary = crashDetection?.toDictionary() ?? [:]
+
+        for field in crashDetectionFields {
+            let sub = String(field.key.dropFirst("crashDetection.".count))
+            Self.assertMatches(dictionary[sub], expected[field.key], field: field)
+        }
+    }
+
     /// The reverse direction of the drift guard above: walks `Config`'s ACTUAL
     /// stored properties (via `Mirror`, so this can't itself drift out of
     /// sync with `Config.swift` the way a hardcoded name list could) and
@@ -381,9 +400,9 @@ final class ConfigStoreTests: XCTestCase {
     /// guard against the property list itself drifting unnoticed.
     func testEveryConfigPropertyIsInTheSchemaOrDocumentedAsExcluded() {
         let configPropertyNames = Set(Mirror(reflecting: Config()).children.compactMap(\.label))
-        XCTAssertEqual(configPropertyNames.count, 57, "Config's property count changed — update this expectation deliberately")
+        XCTAssertEqual(configPropertyNames.count, 58, "Config's property count changed — update this expectation deliberately")
 
-        let schemaPropertyNames = Set(Self.nonNotificationFields.map(\.key)).union(["notification"])
+        let schemaPropertyNames = Set(Self.nonNotificationFields.map(\.key)).union(["notification", "crashDetection"])
 
         // From ConfigSchema.swift's header comment — keep these two lists in
         // sync by hand; this test's job is to catch anything belonging to
@@ -410,7 +429,7 @@ final class ConfigStoreTests: XCTestCase {
     // MARK: - test helpers
 
     private static var nonNotificationFields: [ConfigField] {
-        configSections.flatMap(\.fields).filter { !$0.key.hasPrefix("notification.") }
+        configSections.flatMap(\.fields).filter { !$0.key.hasPrefix("notification.") && !$0.key.hasPrefix("crashDetection.") }
     }
 
     /// A value of the same underlying type as `field.defaultValue`, but
