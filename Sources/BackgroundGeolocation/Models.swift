@@ -273,6 +273,36 @@ public struct MotionChangeEvent {
     }
 }
 
+/// Only armed while moving, and off by default (`crashDetection.enabled`) —
+/// see `Config.crashDetection`.
+public struct CrashEvent {
+    public let timestamp: String
+    public let peakG: Double
+    public let impactDurationMs: Double
+    public let preImpactSpeedMps: Double
+    public let location: Location?
+
+    public init?(dictionary: [String: Any]) {
+        guard let timestamp = dictionary.string("timestamp"),
+              let peakG = dictionary.double("peakG"),
+              let impactDurationMs = dictionary.double("impactDurationMs"),
+              let preImpactSpeedMps = dictionary.double("preImpactSpeedMps") else {
+            return nil
+        }
+        self.timestamp = timestamp
+        self.peakG = peakG
+        self.impactDurationMs = impactDurationMs
+        self.preImpactSpeedMps = preImpactSpeedMps
+        // The engine can't always attach a fix to the crash instant - `nil`
+        // (Android absent, iOS NSNull) must not fail the whole decode.
+        if let locationDictionary = dictionary["location"] as? [String: Any] {
+            self.location = Location(dictionary: locationDictionary)
+        } else {
+            self.location = nil
+        }
+    }
+}
+
 public enum GeofenceAction: String {
     case enter = "ENTER"
     case exit = "EXIT"

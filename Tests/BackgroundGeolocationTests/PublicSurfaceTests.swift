@@ -222,6 +222,29 @@ final class PublicSurfaceTests: XCTestCase {
         XCTAssertNil(withoutLocation?.location)
     }
 
+    func testCrashEventPublicInit() {
+        let withLocation = CrashEvent(dictionary: [
+            "timestamp": "2026-08-17T10:00:00.000Z",
+            "peakG": 4.2,
+            "impactDurationMs": 180.0,
+            "preImpactSpeedMps": 12.5,
+            "location": sampleLocationDictionary(),
+        ])
+        XCTAssertEqual(withLocation?.timestamp, "2026-08-17T10:00:00.000Z")
+        XCTAssertEqual(withLocation?.peakG, 4.2)
+        XCTAssertEqual(withLocation?.impactDurationMs, 180.0)
+        XCTAssertEqual(withLocation?.preImpactSpeedMps, 12.5)
+        XCTAssertNotNil(withLocation?.location)
+
+        let withoutLocation = CrashEvent(dictionary: [
+            "timestamp": "2026-08-17T10:00:00.000Z",
+            "peakG": 4.2,
+            "impactDurationMs": 180.0,
+            "preImpactSpeedMps": 12.5,
+        ])
+        XCTAssertNil(withoutLocation?.location)
+    }
+
     func testGeofenceEventPublicInit() {
         let event = GeofenceEvent(dictionary: [
             "identifier": "home",

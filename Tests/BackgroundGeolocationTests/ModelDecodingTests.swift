@@ -91,6 +91,18 @@ final class ModelDecodingTests: XCTestCase {
         XCTAssertNil(event?.location)
     }
 
+    func testCrashEventAcceptsNSNullLocation() {
+        let event = CrashEvent(dictionary: [
+            "timestamp": "2026-08-17T10:00:00.000Z",
+            "peakG": 4.2,
+            "impactDurationMs": 180.0,
+            "preImpactSpeedMps": 12.5,
+            "location": NSNull(),
+        ])
+        XCTAssertEqual(event?.peakG, 4.2)
+        XCTAssertNil(event?.location)
+    }
+
     func testUnknownActivityTypeFallsBackToUnknownRatherThanFailing() {
         let activity = MotionActivity(dictionary: ["type": "teleporting", "confidence": 10])
         XCTAssertEqual(activity?.type, .unknown)

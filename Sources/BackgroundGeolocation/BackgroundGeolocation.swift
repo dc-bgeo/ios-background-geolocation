@@ -231,6 +231,12 @@ public enum BackgroundGeolocation {
         typedStream("authorization", decode: { $0 })
     }
 
+    /// See `locations`. Only armed while moving, and off by default
+    /// (`crashDetection.enabled`) — see `Config.crashDetection`.
+    public static var crashEvents: AsyncStream<CrashEvent> {
+        typedStream("crash", decode: CrashEvent.init(dictionary:))
+    }
+
     // MARK: - Callback equivalents
 
     @discardableResult
@@ -309,6 +315,16 @@ public enum BackgroundGeolocation {
     @discardableResult
     public static func onAuthorization(_ handler: @escaping ([String: Any]) -> Void) -> Subscription {
         hub.subscribe("authorization", handler)
+    }
+
+    /// Callback-style twin of `crashEvents`.
+    @discardableResult
+    public static func onCrash(_ handler: @escaping (CrashEvent) -> Void) -> Subscription {
+        hub.subscribe("crash") { dictionary in
+            if let event = CrashEvent(dictionary: dictionary) {
+                handler(event)
+            }
+        }
     }
 
     public static func removeListeners() {
