@@ -117,11 +117,24 @@ public enum BackgroundGeolocation {
     /// magnetometer; check `state["headingAvailable"]` from `getState()`
     /// before promising a compass in your UI.
     ///
+    /// **Foreground-only.** The engine drops the sensor subscription whenever
+    /// the app goes to the background and restores it on return to the
+    /// foreground (`BGGeoEngine.mm:2933`/`:2956`) — an unfiltered magnetometer
+    /// feed behind a backgrounded app is pure battery burn. This is automatic
+    /// and needs nothing from you, but it does mean `headingEvents` goes quiet
+    /// for as long as the app is backgrounded; that is expected, not a fault.
+    /// The smoothing window is reset across the pause, so the first sample
+    /// after returning seeds fresh rather than easing out of a heading the
+    /// device left minutes ago. Arming while already backgrounded is fine —
+    /// the session starts subscribed to nothing and begins delivering at the
+    /// next foreground.
+    ///
     /// **Re-arm after a restart.** `stop()` tears the heading feed down on
     /// BOTH platforms (`BGGeoEngine.mm:1590`), so a `stop()`/`start()` cycle
-    /// leaves the compass off until you call this again. The feed is
-    /// independent of tracking otherwise: it needs no location authorization
-    /// and can run without `start()`.
+    /// leaves the compass off until you call this again. Tracking is otherwise
+    /// orthogonal to the compass: it needs no location authorization and runs
+    /// without `start()` — but "no `start()` needed" is not "always on", see
+    /// the foreground note above.
     public static func watchHeading(_ options: WatchHeadingOptions = .init()) {
         engine.startHeading(options.toDictionary())
     }
@@ -269,9 +282,12 @@ public enum BackgroundGeolocation {
         typedStream("crash", decode: CrashEvent.init(dictionary:))
     }
 
-    /// See `locations`. Silent until `watchHeading` arms the compass — and
-    /// silent again after `stop()`, which tears the feed down (re-arm with
-    /// `watchHeading`).
+    /// See `locations`. Silent until `watchHeading` arms the compass, silent
+    /// again after `stop()`, which tears the feed down (re-arm with
+    /// `watchHeading`) — and silent for as long as the app is BACKGROUNDED,
+    /// which is by design: the engine parks the magnetometer on the way out
+    /// and resumes it on the way back in. See `watchHeading` for the whole
+    /// picture before filing background silence as a bug.
     public static var headingEvents: AsyncStream<HeadingEvent> {
         typedStream("heading", decode: HeadingEvent.init(dictionary:))
     }
@@ -366,7 +382,8 @@ public enum BackgroundGeolocation {
         }
     }
 
-    /// Callback-style twin of `headingEvents`.
+    /// Callback-style twin of `headingEvents` — including its silences: no
+    /// samples arrive while the app is backgrounded (see `watchHeading`).
     @discardableResult
     public static func onHeading(_ handler: @escaping (HeadingEvent) -> Void) -> Subscription {
         hub.subscribe("heading") { dictionary in
