@@ -260,6 +260,40 @@ final class FacadeLifecycleTests: XCTestCase {
         XCTAssertEqual(engine.stopWatchCallCount, 1)
     }
 
+    func testWatchHeadingDelegatesOptionsToTheEngine() {
+        BackgroundGeolocation.watchHeading(WatchHeadingOptions(smoothingTauMs: 250, minDeltaDeg: 2))
+        XCTAssertEqual(engine.startHeadingOptions.count, 1)
+        XCTAssertEqual(engine.startHeadingOptions.first?["smoothingTauMs"] as? Double, 250)
+        XCTAssertEqual(engine.startHeadingOptions.first?["minDeltaDeg"] as? Double, 2)
+        // An unset option is OMITTED, not sent as a null the engine would
+        // have to defend against — its own default stands.
+        XCTAssertNil(engine.startHeadingOptions.first?["minIntervalMs"])
+    }
+
+    func testWatchHeadingWithNoOptionsSendsAnEmptyDictionary() {
+        BackgroundGeolocation.watchHeading()
+        XCTAssertEqual(engine.startHeadingOptions.count, 1)
+        XCTAssertTrue(engine.startHeadingOptions.first?.isEmpty == true)
+    }
+
+    func testStopWatchingHeadingDelegatesToTheEngine() {
+        BackgroundGeolocation.stopWatchingHeading()
+        XCTAssertEqual(engine.stopHeadingCallCount, 1)
+    }
+
+    func testOnHeadingDecodesEventsAndDropsUndecodableOnes() {
+        var received: [HeadingEvent] = []
+        _ = BackgroundGeolocation.onHeading { received.append($0) }
+
+        engine.emit("heading", ["heading": 91.5, "accuracy": 12.0, "isTrue": true])
+        engine.emit("heading", ["accuracy": 12.0, "isTrue": true]) // no `heading`
+
+        XCTAssertEqual(received.count, 1)
+        XCTAssertEqual(received.first?.heading, 91.5)
+        XCTAssertEqual(received.first?.accuracy, 12.0)
+        XCTAssertEqual(received.first?.isTrue, true)
+    }
+
     func testRemoveListenersDetachesEverySubscriber() {
         var callCount = 0
         _ = BackgroundGeolocation.onLocation { _ in callCount += 1 }
@@ -290,5 +324,29 @@ final class FacadeLifecycleTests: XCTestCase {
         }
 
         XCTAssertEqual(BackgroundGeolocation.hub.subscriberCount(for: "location"), 0)
+    }
+
+    func testHeadingEventsStreamDecodesEventsAndUnsubscribesWhenItsTaskIsCancelled() async {
+        var received: HeadingEvent?
+        let task = Task {
+            for await event in BackgroundGeolocation.headingEvents {
+                received = event
+            }
+        }
+        await pollUntil("the stream task registers its subscription") {
+            BackgroundGeolocation.hub.subscriberCount(for: "heading") == 1
+        }
+        engine.emit("heading", ["heading": 91.5, "accuracy": 12.0, "isTrue": true])
+        await pollUntil("the consuming task receives the emitted event") {
+            received != nil
+        }
+        XCTAssertEqual(received?.heading, 91.5)
+
+        task.cancel()
+        await pollUntil("cancellation unsubscribes from the hub") {
+            BackgroundGeolocation.hub.subscriberCount(for: "heading") == 0
+        }
+
+        XCTAssertEqual(BackgroundGeolocation.hub.subscriberCount(for: "heading"), 0)
     }
 }

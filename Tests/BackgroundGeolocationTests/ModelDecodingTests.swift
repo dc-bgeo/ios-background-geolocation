@@ -103,6 +103,43 @@ final class ModelDecodingTests: XCTestCase {
         XCTAssertNil(event?.location)
     }
 
+    func testHeadingEventDecodesTheWireShape() {
+        let event = HeadingEvent(dictionary: [
+            "heading": 91.5,
+            "accuracy": 12.0,
+            "isTrue": true,
+        ])
+        XCTAssertEqual(event?.heading, 91.5)
+        XCTAssertEqual(event?.accuracy, 12.0)
+        XCTAssertEqual(event?.isTrue, true)
+    }
+
+    func testHeadingEventKeepsANegativeAccuracyRatherThanDroppingTheEvent() {
+        // CoreLocation reports a NEGATIVE headingAccuracy while the compass is
+        // uncalibrated. That is a real, meaningful reading the app must be
+        // able to see (and grey out its compass over) — not a malformed
+        // payload to drop. Whole-number `0` for `heading` must survive too:
+        // due north is a valid heading, not a missing field.
+        let event = HeadingEvent(dictionary: [
+            "heading": 0,
+            "accuracy": -1,
+            "isTrue": false,
+        ])
+        XCTAssertEqual(event?.heading, 0)
+        XCTAssertEqual(event?.accuracy, -1)
+        XCTAssertEqual(event?.isTrue, false)
+    }
+
+    func testHeadingEventDropsAPayloadMissingARequiredField() {
+        XCTAssertNil(HeadingEvent(dictionary: ["accuracy": 12.0, "isTrue": true]))
+        XCTAssertNil(HeadingEvent(dictionary: ["heading": 91.5, "isTrue": true]))
+        XCTAssertNil(HeadingEvent(dictionary: ["heading": 91.5, "accuracy": 12.0]))
+        // A mistyped value is the same as absent — never coerced to a
+        // fabricated default.
+        XCTAssertNil(HeadingEvent(dictionary: ["heading": "91.5", "accuracy": 12.0, "isTrue": true]))
+        XCTAssertNil(HeadingEvent(dictionary: ["heading": 91.5, "accuracy": 12.0, "isTrue": NSNull()]))
+    }
+
     func testUnknownActivityTypeFallsBackToUnknownRatherThanFailing() {
         let activity = MotionActivity(dictionary: ["type": "teleporting", "confidence": 10])
         XCTAssertEqual(activity?.type, .unknown)

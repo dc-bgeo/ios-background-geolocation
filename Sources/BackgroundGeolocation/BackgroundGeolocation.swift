@@ -104,6 +104,38 @@ public enum BackgroundGeolocation {
         engine.stopWatch()
     }
 
+    // MARK: - Compass heading
+
+    /// Arms the compass. Each admitted sample arrives on its own channel —
+    /// subscribe via `headingEvents`/`onHeading`; heading is NOT part of the
+    /// `location` payload.
+    ///
+    /// Unlike `crashEvents`, this feed is explicitly started (like
+    /// `watchPosition`) and needs no config flag. Calling it a second time
+    /// RESTARTS the session with the new tuning — no smoothing or emission
+    /// state survives. It is a silent no-op on a device without a
+    /// magnetometer; check `state["headingAvailable"]` from `getState()`
+    /// before promising a compass in your UI.
+    ///
+    /// **Re-arm after a restart.** `stop()` tears the heading feed down on
+    /// BOTH platforms (`BGGeoEngine.mm:1590`), so a `stop()`/`start()` cycle
+    /// leaves the compass off until you call this again. The feed is
+    /// independent of tracking otherwise: it needs no location authorization
+    /// and can run without `start()`.
+    public static func watchHeading(_ options: WatchHeadingOptions = .init()) {
+        engine.startHeading(options.toDictionary())
+    }
+
+    /// Disarms the compass. Safe to call when none is running.
+    ///
+    /// The engine's teardown hops to the main queue (`BGGeoEngine.mm:2480`),
+    /// so one already-queued sample may still reach subscribers momentarily
+    /// after this returns — the Android facade documents the same caveat.
+    /// Drop your subscription, don't assume the last event has landed.
+    public static func stopWatchingHeading() {
+        engine.stopHeading()
+    }
+
     // MARK: - Permission / provider
 
     public static func requestPermission() async throws -> AuthorizationStatus {
@@ -237,6 +269,13 @@ public enum BackgroundGeolocation {
         typedStream("crash", decode: CrashEvent.init(dictionary:))
     }
 
+    /// See `locations`. Silent until `watchHeading` arms the compass — and
+    /// silent again after `stop()`, which tears the feed down (re-arm with
+    /// `watchHeading`).
+    public static var headingEvents: AsyncStream<HeadingEvent> {
+        typedStream("heading", decode: HeadingEvent.init(dictionary:))
+    }
+
     // MARK: - Callback equivalents
 
     @discardableResult
@@ -322,6 +361,16 @@ public enum BackgroundGeolocation {
     public static func onCrash(_ handler: @escaping (CrashEvent) -> Void) -> Subscription {
         hub.subscribe("crash") { dictionary in
             if let event = CrashEvent(dictionary: dictionary) {
+                handler(event)
+            }
+        }
+    }
+
+    /// Callback-style twin of `headingEvents`.
+    @discardableResult
+    public static func onHeading(_ handler: @escaping (HeadingEvent) -> Void) -> Subscription {
+        hub.subscribe("heading") { dictionary in
+            if let event = HeadingEvent(dictionary: dictionary) {
                 handler(event)
             }
         }
@@ -448,6 +497,38 @@ public struct WatchPositionOptions {
         if let desiredAccuracy { dictionary["desiredAccuracy"] = desiredAccuracy }
         if let persist { dictionary["persist"] = persist }
         if let extras { dictionary["extras"] = extras }
+        return dictionary
+    }
+}
+
+/// Options for `BackgroundGeolocation.watchHeading`. Every field is optional
+/// and tunes the engine's shared heading policy; leaving one `nil` omits it
+/// from the payload so the engine's own default applies.
+public struct WatchHeadingOptions {
+    /// Time constant of the exponential azimuth smoother, in milliseconds.
+    /// Larger is steadier and laggier.
+    public var smoothingTauMs: Double?
+    /// Floor on the interval between two emitted events, in milliseconds.
+    public var minIntervalMs: Double?
+    /// Floor on the change in heading, in DEGREES, needed to emit before
+    /// `minIntervalMs` has elapsed.
+    public var minDeltaDeg: Double?
+
+    public init(
+        smoothingTauMs: Double? = nil,
+        minIntervalMs: Double? = nil,
+        minDeltaDeg: Double? = nil
+    ) {
+        self.smoothingTauMs = smoothingTauMs
+        self.minIntervalMs = minIntervalMs
+        self.minDeltaDeg = minDeltaDeg
+    }
+
+    func toDictionary() -> [String: Any] {
+        var dictionary: [String: Any] = [:]
+        if let smoothingTauMs { dictionary["smoothingTauMs"] = smoothingTauMs }
+        if let minIntervalMs { dictionary["minIntervalMs"] = minIntervalMs }
+        if let minDeltaDeg { dictionary["minDeltaDeg"] = minDeltaDeg }
         return dictionary
     }
 }

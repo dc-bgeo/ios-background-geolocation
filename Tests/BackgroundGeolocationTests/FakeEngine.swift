@@ -109,6 +109,18 @@ final class FakeEngine: Engine {
         stopWatchCallCount += 1
     }
 
+    // MARK: - Compass heading
+
+    var startHeadingOptions: [[String: Any]] = []
+    func startHeading(_ options: [String: Any]) {
+        startHeadingOptions.append(options)
+    }
+
+    var stopHeadingCallCount = 0
+    func stopHeading() {
+        stopHeadingCallCount += 1
+    }
+
     // MARK: - Permission / provider
 
     var stubbedPermission: EngineOutcome<Int> = .success(0)

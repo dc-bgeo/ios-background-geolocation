@@ -303,6 +303,36 @@ public struct CrashEvent {
     }
 }
 
+/// One admitted compass sample — see `BackgroundGeolocation.watchHeading`,
+/// which is what arms the feed emitting these.
+public struct HeadingEvent {
+    /// Smoothed azimuth in degrees, `[0, 360)`, clockwise from north.
+    public let heading: Double
+    /// CoreLocation's `CLHeading.headingAccuracy`: the estimated error in
+    /// DEGREES, where a NEGATIVE value means the reading is invalid (the
+    /// compass needs calibration). This is a platform-native passthrough and
+    /// is deliberately NOT the same quantity as the Android facade's
+    /// `HeadingEvent.accuracy`, which is an `Int` calibration LEVEL (0-3).
+    /// Neither is convertible to the other, so each SDK types it natively
+    /// rather than inventing a lowest-common-denominator scale.
+    public let accuracy: Double
+    /// `true` when `heading` is relative to TRUE north — CoreLocation needs a
+    /// location fix to derive the magnetic declination. Until it has one, the
+    /// engine reports magnetic north and this is `false`.
+    public let isTrue: Bool
+
+    public init?(dictionary: [String: Any]) {
+        guard let heading = dictionary.double("heading"),
+              let accuracy = dictionary.double("accuracy"),
+              let isTrue = dictionary.bool("isTrue") else {
+            return nil
+        }
+        self.heading = heading
+        self.accuracy = accuracy
+        self.isTrue = isTrue
+    }
+}
+
 public enum GeofenceAction: String {
     case enter = "ENTER"
     case exit = "EXIT"

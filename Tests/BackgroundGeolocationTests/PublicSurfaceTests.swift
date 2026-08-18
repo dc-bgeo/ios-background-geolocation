@@ -245,6 +245,20 @@ final class PublicSurfaceTests: XCTestCase {
         XCTAssertNil(withoutLocation?.location)
     }
 
+    func testHeadingEventPublicInit() {
+        let event = HeadingEvent(dictionary: [
+            "heading": 91.5,
+            "accuracy": 12.0,
+            "isTrue": true,
+        ])
+        XCTAssertEqual(event?.heading, 91.5)
+        // Double, not Int — iOS carries CoreLocation's degrees-of-error
+        // reading, where a negative value means "uncalibrated". The Android
+        // facade's twin is an Int calibration level; see `HeadingEvent`.
+        XCTAssertEqual(event?.accuracy, 12.0)
+        XCTAssertEqual(event?.isTrue, true)
+    }
+
     func testGeofenceEventPublicInit() {
         let event = GeofenceEvent(dictionary: [
             "identifier": "home",
@@ -511,5 +525,23 @@ final class PublicSurfaceTests: XCTestCase {
         XCTAssertEqual(options.desiredAccuracy, DesiredAccuracy.medium.rawValue)
         XCTAssertEqual(options.persist, false)
         XCTAssertEqual(options.extras?["reason"] as? String, "watch")
+    }
+
+    func testWatchHeadingOptionsPublicInit() {
+        let options = WatchHeadingOptions(
+            smoothingTauMs: 250,
+            minIntervalMs: 100,
+            minDeltaDeg: 2
+        )
+        XCTAssertEqual(options.smoothingTauMs, 250)
+        XCTAssertEqual(options.minIntervalMs, 100)
+        XCTAssertEqual(options.minDeltaDeg, 2)
+
+        // Every field is optional; the default init sends the engine nothing
+        // and lets its own tuning defaults stand.
+        let defaults = WatchHeadingOptions()
+        XCTAssertNil(defaults.smoothingTauMs)
+        XCTAssertNil(defaults.minIntervalMs)
+        XCTAssertNil(defaults.minDeltaDeg)
     }
 }

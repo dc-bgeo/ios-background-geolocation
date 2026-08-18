@@ -26,6 +26,9 @@ protocol Engine: AnyObject {
     func startWatch(_ options: [String: Any])
     func stopWatch()
 
+    func startHeading(_ options: [String: Any])
+    func stopHeading()
+
     func requestPermission(resolve: @escaping (Int) -> Void,
                            reject: @escaping (String, String) -> Void)
     func requestTemporaryFullAccuracy(_ purpose: String,
@@ -125,6 +128,14 @@ final class LiveEngine: Engine {
 
     func stopWatch() {
         BGGeoEngine.shared.stopWatch()
+    }
+
+    func startHeading(_ options: [String: Any]) {
+        BGGeoEngine.shared.startHeading(options)
+    }
+
+    func stopHeading() {
+        BGGeoEngine.shared.stopHeading()
     }
 
     func requestPermission(resolve: @escaping (Int) -> Void,
