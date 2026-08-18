@@ -276,8 +276,8 @@ final class FacadeLifecycleTests: XCTestCase {
         XCTAssertTrue(engine.startHeadingOptions.first?.isEmpty == true)
     }
 
-    func testStopWatchingHeadingDelegatesToTheEngine() {
-        BackgroundGeolocation.stopWatchingHeading()
+    func testStopWatchHeadingDelegatesToTheEngine() {
+        BackgroundGeolocation.stopWatchHeading()
         XCTAssertEqual(engine.stopHeadingCallCount, 1)
     }
 

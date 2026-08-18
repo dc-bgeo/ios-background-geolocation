@@ -132,7 +132,7 @@ public enum BackgroundGeolocation {
     /// so one already-queued sample may still reach subscribers momentarily
     /// after this returns — the Android facade documents the same caveat.
     /// Drop your subscription, don't assume the last event has landed.
-    public static func stopWatchingHeading() {
+    public static func stopWatchHeading() {
         engine.stopHeading()
     }
 
