@@ -43,6 +43,10 @@ import _SwiftConcurrencyShims
   @objc final public var wakeHoldActive: Swift.Bool {
     get
   }
+  @objc final public var insufficientlyInUse: Swift.Bool {
+    get
+  }
+  @objc final public var onDegradedChange: ((Swift.Bool) -> Swift.Void)?
   @objc final public func updateServiceSession(authorizedAlways: Swift.Bool)
   @objc final public func updateBackgroundActivity(needed: Swift.Bool)
   @objc final public func beginWakeBackgroundActivityHold()

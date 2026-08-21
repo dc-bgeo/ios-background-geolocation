@@ -22,7 +22,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// Sink for native events. The TurboModule sets this to fan engine events into
 /// the codegen `emitOnX:` methods. Names: location, locationerror,
-/// providerchange, heartbeat, motionchange, geofence, geofenceschange.
+/// providerchange, heartbeat, motionchange, geofence, geofenceschange, crash.
 @property (nonatomic, copy, nullable) void (^eventEmitter)(NSString *name, NSDictionary *body);
 
 /// Merge a JS config dictionary into the engine's live config.
@@ -104,6 +104,15 @@ NS_ASSUME_NONNULL_BEGIN
 /// watch's success callback). Options: interval (ms), persist, extras.
 - (void)startWatch:(nullable NSDictionary *)options;
 - (void)stopWatch;
+
+/// Begin / end the compass feed. Each admitted sample is emitted via `heading`
+/// as { heading, accuracy, isTrue }. Options (all optional, all numbers) tune
+/// the shared heading policy: smoothingTauMs, minIntervalMs, minDeltaDeg.
+/// A second `startHeading:` restarts the session with the new tuning; it is a
+/// silent no-op on a device without a magnetometer (see `headingAvailable` in
+/// the State dictionary).
+- (void)startHeading:(nullable NSDictionary *)options;
+- (void)stopHeading;
 
 /// Current accumulated odometer distance in metres.
 @property (nonatomic, readonly) double odometer;
