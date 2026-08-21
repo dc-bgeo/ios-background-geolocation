@@ -245,6 +245,29 @@ final class PublicSurfaceTests: XCTestCase {
         XCTAssertNil(withoutLocation?.location)
     }
 
+    func testDistractionEventPublicInit() {
+        let withLocation = DistractionEvent(dictionary: [
+            "timestamp": "2026-08-21T10:00:00.000Z",
+            "startTimestamp": "2026-08-21T09:59:50.000Z",
+            "durationSec": 10.0,
+            "cause": "h",
+            "location": sampleLocationDictionary(),
+        ])
+        XCTAssertEqual(withLocation?.timestamp, "2026-08-21T10:00:00.000Z")
+        XCTAssertEqual(withLocation?.startTimestamp, "2026-08-21T09:59:50.000Z")
+        XCTAssertEqual(withLocation?.durationSec, 10.0)
+        XCTAssertEqual(withLocation?.cause, "h")
+        XCTAssertNotNil(withLocation?.location)
+
+        let withoutLocation = DistractionEvent(dictionary: [
+            "timestamp": "2026-08-21T10:00:00.000Z",
+            "startTimestamp": "2026-08-21T09:59:50.000Z",
+            "durationSec": 10.0,
+            "cause": "h",
+        ])
+        XCTAssertNil(withoutLocation?.location)
+    }
+
     func testHeadingEventPublicInit() {
         let event = HeadingEvent(dictionary: [
             "heading": 91.5,

@@ -282,6 +282,12 @@ public enum BackgroundGeolocation {
         typedStream("crash", decode: CrashEvent.init(dictionary:))
     }
 
+    /// See `locations`. Only armed while moving, and off by default
+    /// (`distractionDetection.enabled`) — see `Config.distractionDetection`.
+    public static var distractionEvents: AsyncStream<DistractionEvent> {
+        typedStream("distraction", decode: DistractionEvent.init(dictionary:))
+    }
+
     /// See `locations`. Silent until `watchHeading` arms the compass, silent
     /// again after `stop()`, which tears the feed down (re-arm with
     /// `watchHeading`) — and silent for as long as the app is BACKGROUNDED,
@@ -377,6 +383,16 @@ public enum BackgroundGeolocation {
     public static func onCrash(_ handler: @escaping (CrashEvent) -> Void) -> Subscription {
         hub.subscribe("crash") { dictionary in
             if let event = CrashEvent(dictionary: dictionary) {
+                handler(event)
+            }
+        }
+    }
+
+    /// Callback-style twin of `distractionEvents`.
+    @discardableResult
+    public static func onDistraction(_ handler: @escaping (DistractionEvent) -> Void) -> Subscription {
+        hub.subscribe("distraction") { dictionary in
+            if let event = DistractionEvent(dictionary: dictionary) {
                 handler(event)
             }
         }

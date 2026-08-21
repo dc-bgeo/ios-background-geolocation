@@ -310,6 +310,43 @@ public struct CrashEvent {
     }
 }
 
+/// On-device distracted-driving episode — see `Config.distractionDetection`.
+///
+/// The `dds`/`ddc`/`ddd` closing keys ride every record built between the
+/// episode closing and the first record that is actually persisted, so a
+/// `sample: true` one-shot and the inline `location` embedded in this very
+/// event can each carry the closing keys more than once. The uploaded-record
+/// contract is unaffected, but don't count episodes off the location stream —
+/// this `DistractionEvent` fires exactly once per episode and is the thing
+/// to count.
+public struct DistractionEvent {
+    public let timestamp: String
+    public let startTimestamp: String
+    public let durationSec: Double
+    public let cause: String
+    public let location: Location?
+
+    public init?(dictionary: [String: Any]) {
+        guard let timestamp = dictionary.string("timestamp"),
+              let startTimestamp = dictionary.string("startTimestamp"),
+              let durationSec = dictionary.double("durationSec"),
+              let cause = dictionary.string("cause") else {
+            return nil
+        }
+        self.timestamp = timestamp
+        self.startTimestamp = startTimestamp
+        self.durationSec = durationSec
+        self.cause = cause
+        // The engine can't always attach a fix to the episode's close instant
+        // - `nil` (Android absent, iOS NSNull) must not fail the whole decode.
+        if let locationDictionary = dictionary["location"] as? [String: Any] {
+            self.location = Location(dictionary: locationDictionary)
+        } else {
+            self.location = nil
+        }
+    }
+}
+
 /// One admitted compass sample — see `BackgroundGeolocation.watchHeading`,
 /// which is what arms the feed emitting these.
 public struct HeadingEvent {

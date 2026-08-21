@@ -103,6 +103,20 @@ final class ModelDecodingTests: XCTestCase {
         XCTAssertNil(event?.location)
     }
 
+    func testDistractionEventAcceptsNSNullLocation() {
+        let event = DistractionEvent(dictionary: [
+            "timestamp": "2026-08-21T10:00:00.000Z",
+            "startTimestamp": "2026-08-21T09:59:50.000Z",
+            "durationSec": 10.0,
+            "cause": "h",
+            "location": NSNull(),
+        ])
+        XCTAssertEqual(event?.startTimestamp, "2026-08-21T09:59:50.000Z")
+        XCTAssertEqual(event?.durationSec, 10.0)
+        XCTAssertEqual(event?.cause, "h")
+        XCTAssertNil(event?.location)
+    }
+
     func testHeadingEventDecodesTheWireShape() {
         let event = HeadingEvent(dictionary: [
             "heading": 91.5,
