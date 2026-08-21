@@ -226,6 +226,12 @@ public struct ProviderState {
     public let gps: Bool
     public let network: Bool
     public let accuracyAuthorization: AccuracyAuthorization?
+    /// iOS 18+. `true` while location authorization is granted but iOS is
+    /// refusing background runtime because the app has not been opened since
+    /// it was relaunched in the background — tracking degrades to short wake
+    /// bursts until the user next brings the app to the foreground. Prompt
+    /// the user to open the app to restore continuous tracking.
+    public let insufficientlyInUse: Bool
 
     /// Non-failable, for the same reason as `State.init(dictionary:)`: the
     /// engine always resolves, never rejects. Missing/unrecognised fields
@@ -245,6 +251,7 @@ public struct ProviderState {
         } else {
             self.accuracyAuthorization = nil
         }
+        self.insufficientlyInUse = dictionary.bool("insufficientlyInUse") ?? false
     }
 }
 

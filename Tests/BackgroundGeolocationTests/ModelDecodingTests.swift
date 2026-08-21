@@ -199,11 +199,12 @@ final class ModelDecodingTests: XCTestCase {
     func testProviderStateDecodesTypedEnums() {
         let providerState = ProviderState(dictionary: [
             "status": 3, "enabled": true, "gps": true, "network": false,
-            "accuracyAuthorization": 1,
+            "accuracyAuthorization": 1, "insufficientlyInUse": true,
         ])
         XCTAssertEqual(providerState.status, .always)
         XCTAssertEqual(providerState.accuracyAuthorization, .reduced)
         XCTAssertEqual(providerState.network, false)
+        XCTAssertEqual(providerState.insufficientlyInUse, true)
     }
 
     func testProviderStateFallsBackRatherThanFailingOnAnEmptyDictionary() {
@@ -214,6 +215,8 @@ final class ModelDecodingTests: XCTestCase {
         XCTAssertEqual(providerState.gps, false)
         XCTAssertEqual(providerState.network, false)
         XCTAssertNil(providerState.accuracyAuthorization)
+        // Android (and pre-0.15 iOS cores) never emit the key — must read false.
+        XCTAssertEqual(providerState.insufficientlyInUse, false)
     }
 
     func testLogEntryDataDecodesAsTheParsedObjectNotAString() throws {
