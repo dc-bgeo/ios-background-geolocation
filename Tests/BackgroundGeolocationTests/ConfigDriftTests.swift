@@ -54,7 +54,7 @@ final class ConfigDriftTests: XCTestCase {
 
     func testConfigCoversExactlyTheKeysTypesTSDeclares() throws {
         let expected = try keysDeclaredInTypesTS()
-        XCTAssertEqual(expected.count, 58, "types.ts key count changed — update this expectation deliberately")
+        XCTAssertEqual(expected.count, 59, "types.ts key count changed — update this expectation deliberately")
 
         // Build a Config with every property set, then read the dictionary back.
         let actual = Set(Config.everyKeyPopulated.toDictionary().keys)
@@ -132,6 +132,7 @@ extension Config {
         geofenceProximityRadius: 1000,
         maxMonitoredGeofences: -1,
         geofenceInitialTriggerEntry: true,
-        crashDetection: CrashDetectionConfig(enabled: true, minSpeed: 11.11, impactThreshold: 4.0)
+        crashDetection: CrashDetectionConfig(enabled: true, minSpeed: 11.11, impactThreshold: 4.0),
+        distractionDetection: DistractionDetectionConfig(enabled: true, minSpeed: 5.0, minEpisodeSec: 5.0)
     )
 }

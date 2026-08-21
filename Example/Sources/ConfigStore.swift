@@ -88,11 +88,12 @@ public final class ConfigStore: ObservableObject {
     /// path below uses).
     public func merged(into base: Config) -> Config {
         var config = base
-        for (key, value) in overrides where !key.hasPrefix("notification.") && !key.hasPrefix("crashDetection.") {
+        for (key, value) in overrides where !key.hasPrefix("notification.") && !key.hasPrefix("crashDetection.") && !key.hasPrefix("distractionDetection.") {
             Self.apply(key: key, rawValue: value, into: &config)
         }
         config.notification = overlayNotificationOverrides(onto: config.notification)
         config.crashDetection = overlayCrashDetectionOverrides(onto: config.crashDetection)
+        config.distractionDetection = overlayDistractionDetectionOverrides(onto: config.distractionDetection)
         return config
     }
 
@@ -119,6 +120,8 @@ public final class ConfigStore: ObservableObject {
             patch.notification = fullNotificationPatch(source: overrides)
         } else if key.hasPrefix("crashDetection.") {
             patch.crashDetection = fullCrashDetectionPatch(source: overrides)
+        } else if key.hasPrefix("distractionDetection.") {
+            patch.distractionDetection = fullDistractionDetectionPatch(source: overrides)
         } else {
             Self.apply(key: key, rawValue: overrides[key] as Any, into: &patch)
         }
@@ -129,6 +132,7 @@ public final class ConfigStore: ObservableObject {
         var patch = Config()
         var rebuiltNotification = false
         var rebuiltCrashDetection = false
+        var rebuiltDistractionDetection = false
         for key in keys {
             if key.hasPrefix("notification.") {
                 guard !rebuiltNotification else { continue }
@@ -138,6 +142,10 @@ public final class ConfigStore: ObservableObject {
                 guard !rebuiltCrashDetection else { continue }
                 rebuiltCrashDetection = true
                 patch.crashDetection = fullCrashDetectionPatch(source: [:])
+            } else if key.hasPrefix("distractionDetection.") {
+                guard !rebuiltDistractionDetection else { continue }
+                rebuiltDistractionDetection = true
+                patch.distractionDetection = fullDistractionDetectionPatch(source: [:])
             } else if let defaultValue = configDefault(for: key) {
                 Self.apply(key: key, rawValue: defaultValue.any, into: &patch)
             }
@@ -217,6 +225,39 @@ public final class ConfigStore: ObservableObject {
         }
     }
 
+    /// `merged(into:)`'s distractionDetection handling: only touches the
+    /// dot-keys this store actually has an override for.
+    private func overlayDistractionDetectionOverrides(onto base: DistractionDetectionConfig?) -> DistractionDetectionConfig? {
+        let overriddenKeys = configKeys(withPrefix: "distractionDetection.").filter { overrides[$0] != nil }
+        guard !overriddenKeys.isEmpty else { return base }
+        var distractionDetection = base ?? DistractionDetectionConfig()
+        for key in overriddenKeys {
+            guard let raw = overrides[key] else { continue }
+            assignDistractionDetectionField(String(key.dropFirst("distractionDetection.".count)), raw, into: &distractionDetection)
+        }
+        return distractionDetection
+    }
+
+    /// Live-push/reset's distractionDetection handling: rebuilds EVERY field
+    /// from `source` (override if present, else the schema default).
+    private func fullDistractionDetectionPatch(source: [String: Any]) -> DistractionDetectionConfig {
+        var distractionDetection = DistractionDetectionConfig()
+        for key in configKeys(withPrefix: "distractionDetection.") {
+            guard let raw = source[key] ?? configDefault(for: key)?.any else { continue }
+            assignDistractionDetectionField(String(key.dropFirst("distractionDetection.".count)), raw, into: &distractionDetection)
+        }
+        return distractionDetection
+    }
+
+    private func assignDistractionDetectionField(_ sub: String, _ raw: Any, into distractionDetection: inout DistractionDetectionConfig) {
+        switch sub {
+        case "enabled": Self.set(&distractionDetection.enabled, ConfigCoerce.bool(raw))
+        case "minSpeed": Self.set(&distractionDetection.minSpeed, ConfigCoerce.double(raw))
+        case "minEpisodeSec": Self.set(&distractionDetection.minEpisodeSec, ConfigCoerce.double(raw))
+        default: break
+        }
+    }
+
     // MARK: - Key -> Config property
 
     /// Only writes `property` when `coerced` succeeded. A type-mismatched
@@ -285,7 +326,7 @@ public final class ConfigStore: ObservableObject {
         case "geofenceProximityRadius": set(&config.geofenceProximityRadius, ConfigCoerce.double(rawValue))
         case "maxMonitoredGeofences": set(&config.maxMonitoredGeofences, ConfigCoerce.int(rawValue))
         case "geofenceInitialTriggerEntry": set(&config.geofenceInitialTriggerEntry, ConfigCoerce.bool(rawValue))
-        default: break // notification.*/crashDetection.* are handled by the caller; unknown keys are ignored.
+        default: break // notification.*/crashDetection.*/distractionDetection.* are handled by the caller; unknown keys are ignored.
         }
     }
 }

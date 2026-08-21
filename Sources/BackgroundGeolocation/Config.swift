@@ -123,6 +123,37 @@ public struct CrashDetectionConfig {
     }
 }
 
+/// On-device distracted-driving detection. Off by default. While moving, the
+/// engine watches the shared ~50 Hz accelerometer stream (plus screen state
+/// on Android) for a phone-handling signature and emits a `distraction` event
+/// when an episode closes.
+public struct DistractionDetectionConfig {
+    /// default false
+    public var enabled: Bool?
+    /// Episode-open speed gate in m/s. Default 5.0 (18 km/h).
+    public var minSpeed: Double?
+    /// Minimum episode length in seconds; shorter handling is ignored. Default 5.
+    public var minEpisodeSec: Double?
+
+    public init(
+        enabled: Bool? = nil,
+        minSpeed: Double? = nil,
+        minEpisodeSec: Double? = nil
+    ) {
+        self.enabled = enabled
+        self.minSpeed = minSpeed
+        self.minEpisodeSec = minEpisodeSec
+    }
+
+    public func toDictionary() -> [String: Any] {
+        var dictionary: [String: Any] = [:]
+        if let enabled { dictionary["enabled"] = enabled }
+        if let minSpeed { dictionary["minSpeed"] = minSpeed }
+        if let minEpisodeSec { dictionary["minEpisodeSec"] = minEpisodeSec }
+        return dictionary
+    }
+}
+
 /// Mirrors `interface Config` in `react-native/src/types.ts` (the cross-SDK
 /// source of truth for all four front-ends) property-for-property. Guarded
 /// against drift by `ConfigDriftTests`.
@@ -255,6 +286,8 @@ public struct Config {
     public var geofenceInitialTriggerEntry: Bool?
     /// On-device collision detection. Off by default. See `CrashDetectionConfig`.
     public var crashDetection: CrashDetectionConfig?
+    /// On-device distracted-driving detection. Off by default. See `DistractionDetectionConfig`.
+    public var distractionDetection: DistractionDetectionConfig?
 
     public init(
         locationAuthorizationRequest: String? = nil,
@@ -314,7 +347,8 @@ public struct Config {
         geofenceProximityRadius: Double? = nil,
         maxMonitoredGeofences: Int? = nil,
         geofenceInitialTriggerEntry: Bool? = nil,
-        crashDetection: CrashDetectionConfig? = nil
+        crashDetection: CrashDetectionConfig? = nil,
+        distractionDetection: DistractionDetectionConfig? = nil
     ) {
         self.locationAuthorizationRequest = locationAuthorizationRequest
         self.locationAuthorizationAlert = locationAuthorizationAlert
@@ -374,6 +408,7 @@ public struct Config {
         self.maxMonitoredGeofences = maxMonitoredGeofences
         self.geofenceInitialTriggerEntry = geofenceInitialTriggerEntry
         self.crashDetection = crashDetection
+        self.distractionDetection = distractionDetection
     }
 
     /// `setConfig` is a PATCH: this OMITS every `nil` property so an
@@ -454,6 +489,7 @@ public struct Config {
         if let maxMonitoredGeofences { dictionary["maxMonitoredGeofences"] = maxMonitoredGeofences }
         if let geofenceInitialTriggerEntry { dictionary["geofenceInitialTriggerEntry"] = geofenceInitialTriggerEntry }
         if let crashDetection { dictionary["crashDetection"] = crashDetection.toDictionary() }
+        if let distractionDetection { dictionary["distractionDetection"] = distractionDetection.toDictionary() }
 
         return dictionary
     }

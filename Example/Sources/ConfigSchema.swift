@@ -340,6 +340,11 @@ public let configSections: [ConfigSection] = [
         ConfigField(key: "crashDetection.minSpeed", label: "Crash min speed", type: .number, defaultValue: .double(11.11), unit: "m/s"),
         ConfigField(key: "crashDetection.impactThreshold", label: "Crash impact threshold", type: .number, defaultValue: .double(4), unit: "g"),
     ]),
+    ConfigSection("Distraction detection", [
+        ConfigField(key: "distractionDetection.enabled", label: "Distraction detection", type: .bool, defaultValue: .bool(false)),
+        ConfigField(key: "distractionDetection.minSpeed", label: "Distraction min speed", type: .number, defaultValue: .double(5), unit: "m/s"),
+        ConfigField(key: "distractionDetection.minEpisodeSec", label: "Distraction min episode", type: .number, defaultValue: .double(5), unit: "s"),
+    ]),
     ConfigSection("Application", [
         ConfigField(key: "heartbeatInterval", label: "Heartbeat interval", type: .number, defaultValue: .int(60), unit: "s"),
         ConfigField(key: "stopOnTerminate", label: "Stop on terminate", type: .bool, defaultValue: .bool(true)),
