@@ -22,7 +22,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 /// Sink for native events. The TurboModule sets this to fan engine events into
 /// the codegen `emitOnX:` methods. Names: location, locationerror,
-/// providerchange, heartbeat, motionchange, geofence, geofenceschange, crash.
+/// providerchange, heartbeat, motionchange, geofence, geofenceschange, crash,
+/// distraction.
 @property (nonatomic, copy, nullable) void (^eventEmitter)(NSString *name, NSDictionary *body);
 
 /// Merge a JS config dictionary into the engine's live config.
