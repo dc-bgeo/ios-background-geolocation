@@ -54,7 +54,7 @@ final class ConfigDriftTests: XCTestCase {
 
     func testConfigCoversExactlyTheKeysTypesTSDeclares() throws {
         let expected = try keysDeclaredInTypesTS()
-        XCTAssertEqual(expected.count, 59, "types.ts key count changed — update this expectation deliberately")
+        XCTAssertEqual(expected.count, 64, "types.ts key count changed — update this expectation deliberately")
 
         // Build a Config with every property set, then read the dictionary back.
         let actual = Set(Config.everyKeyPopulated.toDictionary().keys)
@@ -67,9 +67,9 @@ final class ConfigDriftTests: XCTestCase {
 }
 
 extension Config {
-    /// Every one of the 57 `Config` properties set to a concrete value.
+    /// Every one of the 64 `Config` properties set to a concrete value.
     /// Enumerated explicitly, in `types.ts` declaration order — a fixture
-    /// that only set 40 keys would let the other 17 vanish from
+    /// that only set 40 keys would let the other 21 vanish from
     /// `ConfigDriftTests` without failing it.
     static let everyKeyPopulated = Config(
         locationAuthorizationRequest: "Always",
@@ -95,6 +95,8 @@ extension Config {
         stopTimeout: 5,
         showsBackgroundLocationIndicator: true,
         stationaryRadius: 25,
+        wakeRegionRingCount: 8,
+        wakeRegionRingDistance: 50,
         stationaryDistanceFilter: 25,
         preventSuspend: false,
         heartbeatInterval: 60,
@@ -127,6 +129,9 @@ extension Config {
             refreshUrl: "https://example.test/refresh"
         ),
         stationaryKeepAlive: true,
+        dormantOnStationary: false,
+        dormantWakeInterval: 1800,
+        dormantGrace: 120,
         diagnosticExtras: false,
         useSessionEngine: true,
         geofenceProximityRadius: 1000,

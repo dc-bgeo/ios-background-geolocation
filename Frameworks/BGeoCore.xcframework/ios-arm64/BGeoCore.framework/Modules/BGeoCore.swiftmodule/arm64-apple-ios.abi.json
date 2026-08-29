@@ -952,6 +952,269 @@
             ]
           },
           {
+            "kind": "Var",
+            "name": "deliveryInsufficientlyInUse",
+            "printedName": "deliveryInsufficientlyInUse",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "c:@M@BGeoCore@objc(cs)BGGeoSessionStream(py)deliveryInsufficientlyInUse",
+            "mangledName": "$s8BGeoCore18BGGeoSessionStreamC27deliveryInsufficientlyInUseSbvp",
+            "moduleName": "BGeoCore",
+            "declAttributes": [
+              "HasInitialValue",
+              "Final",
+              "HasStorage",
+              "SetterAccess",
+              "AccessControl",
+              "ObjC",
+              "RawDocComment"
+            ],
+            "hasStorage": true,
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "c:@M@BGeoCore@objc(cs)BGGeoSessionStream(im)deliveryInsufficientlyInUse",
+                "mangledName": "$s8BGeoCore18BGGeoSessionStreamC27deliveryInsufficientlyInUseSbvg",
+                "moduleName": "BGeoCore",
+                "implicit": true,
+                "declAttributes": [
+                  "Final",
+                  "ObjC"
+                ],
+                "accessorKind": "get"
+              }
+            ]
+          },
+          {
+            "kind": "Var",
+            "name": "deliveryUnavailable",
+            "printedName": "deliveryUnavailable",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Bool",
+                "printedName": "Swift.Bool",
+                "usr": "s:Sb"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "c:@M@BGeoCore@objc(cs)BGGeoSessionStream(py)deliveryUnavailable",
+            "mangledName": "$s8BGeoCore18BGGeoSessionStreamC19deliveryUnavailableSbvp",
+            "moduleName": "BGeoCore",
+            "declAttributes": [
+              "HasInitialValue",
+              "Final",
+              "HasStorage",
+              "SetterAccess",
+              "AccessControl",
+              "ObjC"
+            ],
+            "hasStorage": true,
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Bool",
+                    "printedName": "Swift.Bool",
+                    "usr": "s:Sb"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "c:@M@BGeoCore@objc(cs)BGGeoSessionStream(im)deliveryUnavailable",
+                "mangledName": "$s8BGeoCore18BGGeoSessionStreamC19deliveryUnavailableSbvg",
+                "moduleName": "BGeoCore",
+                "implicit": true,
+                "declAttributes": [
+                  "Final",
+                  "ObjC"
+                ],
+                "accessorKind": "get"
+              }
+            ]
+          },
+          {
+            "kind": "Var",
+            "name": "onDeliveryRefusedChange",
+            "printedName": "onDeliveryRefusedChange",
+            "children": [
+              {
+                "kind": "TypeNominal",
+                "name": "Optional",
+                "printedName": "((Swift.Bool) -> ())?",
+                "children": [
+                  {
+                    "kind": "TypeFunc",
+                    "name": "Function",
+                    "printedName": "(Swift.Bool) -> ()",
+                    "children": [
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Void",
+                        "printedName": "()"
+                      },
+                      {
+                        "kind": "TypeNominal",
+                        "name": "Bool",
+                        "printedName": "Swift.Bool",
+                        "usr": "s:Sb"
+                      }
+                    ]
+                  }
+                ],
+                "usr": "s:Sq"
+              }
+            ],
+            "declKind": "Var",
+            "usr": "c:@M@BGeoCore@objc(cs)BGGeoSessionStream(py)onDeliveryRefusedChange",
+            "mangledName": "$s8BGeoCore18BGGeoSessionStreamC23onDeliveryRefusedChangeySbcSgvp",
+            "moduleName": "BGeoCore",
+            "declAttributes": [
+              "HasInitialValue",
+              "Final",
+              "HasStorage",
+              "AccessControl",
+              "ObjC",
+              "RawDocComment"
+            ],
+            "hasStorage": true,
+            "accessors": [
+              {
+                "kind": "Accessor",
+                "name": "Get",
+                "printedName": "Get()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "((Swift.Bool) -> ())?",
+                    "children": [
+                      {
+                        "kind": "TypeFunc",
+                        "name": "Function",
+                        "printedName": "(Swift.Bool) -> ()",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Void",
+                            "printedName": "()"
+                          },
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Bool",
+                            "printedName": "Swift.Bool",
+                            "usr": "s:Sb"
+                          }
+                        ]
+                      }
+                    ],
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "c:@M@BGeoCore@objc(cs)BGGeoSessionStream(im)onDeliveryRefusedChange",
+                "mangledName": "$s8BGeoCore18BGGeoSessionStreamC23onDeliveryRefusedChangeySbcSgvg",
+                "moduleName": "BGeoCore",
+                "implicit": true,
+                "declAttributes": [
+                  "Final",
+                  "ObjC"
+                ],
+                "accessorKind": "get"
+              },
+              {
+                "kind": "Accessor",
+                "name": "Set",
+                "printedName": "Set()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  },
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Optional",
+                    "printedName": "((Swift.Bool) -> ())?",
+                    "children": [
+                      {
+                        "kind": "TypeFunc",
+                        "name": "Function",
+                        "printedName": "(Swift.Bool) -> ()",
+                        "children": [
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Void",
+                            "printedName": "()"
+                          },
+                          {
+                            "kind": "TypeNominal",
+                            "name": "Bool",
+                            "printedName": "Swift.Bool",
+                            "usr": "s:Sb"
+                          }
+                        ]
+                      }
+                    ],
+                    "usr": "s:Sq"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "c:@M@BGeoCore@objc(cs)BGGeoSessionStream(im)setOnDeliveryRefusedChange:",
+                "mangledName": "$s8BGeoCore18BGGeoSessionStreamC23onDeliveryRefusedChangeySbcSgvs",
+                "moduleName": "BGeoCore",
+                "implicit": true,
+                "declAttributes": [
+                  "Final",
+                  "ObjC"
+                ],
+                "accessorKind": "set"
+              },
+              {
+                "kind": "Accessor",
+                "name": "Modify",
+                "printedName": "Modify()",
+                "children": [
+                  {
+                    "kind": "TypeNominal",
+                    "name": "Void",
+                    "printedName": "()"
+                  }
+                ],
+                "declKind": "Accessor",
+                "usr": "s:8BGeoCore18BGGeoSessionStreamC23onDeliveryRefusedChangeySbcSgvM",
+                "mangledName": "$s8BGeoCore18BGGeoSessionStreamC23onDeliveryRefusedChangeySbcSgvM",
+                "moduleName": "BGeoCore",
+                "implicit": true,
+                "declAttributes": [
+                  "Final"
+                ],
+                "accessorKind": "_modify"
+              }
+            ]
+          },
+          {
             "kind": "Function",
             "name": "updateServiceSession",
             "printedName": "updateServiceSession(authorizedAlways:)",
@@ -1432,93 +1695,107 @@
   },
   "ConstValues": [
     {
-      "filePath": "\/Users\/dc\/projects\/bgeo\/core\/ios\/Sources\/BGGeoLicense.swift",
+      "filePath": "\/Users\/dc\/projects\/bgeo\/core\/.worktrees\/moving-mosaic\/ios\/Sources\/BGGeoLicense.swift",
       "kind": "Array",
       "offset": 1045,
       "length": 111,
       "value": "[\"3419211b1a8911633439d2f8d621c4261f72bb1782c8f5060acc419336c2f2e1\"]"
     },
     {
-      "filePath": "\/Users\/dc\/projects\/bgeo\/core\/ios\/Sources\/BGGeoLicenseBanner.swift",
+      "filePath": "\/Users\/dc\/projects\/bgeo\/core\/.worktrees\/moving-mosaic\/ios\/Sources\/BGGeoLicenseBanner.swift",
       "kind": "BooleanLiteral",
       "offset": 820,
       "length": 5,
       "value": "false"
     },
     {
-      "filePath": "\/Users\/dc\/projects\/bgeo\/core\/ios\/Sources\/BGGeoSessionStream.swift",
+      "filePath": "\/Users\/dc\/projects\/bgeo\/core\/.worktrees\/moving-mosaic\/ios\/Sources\/BGGeoSessionStream.swift",
       "kind": "BooleanLiteral",
       "offset": 2690,
       "length": 5,
       "value": "false"
     },
     {
-      "filePath": "\/Users\/dc\/projects\/bgeo\/core\/ios\/Sources\/BGGeoSessionStream.swift",
+      "filePath": "\/Users\/dc\/projects\/bgeo\/core\/.worktrees\/moving-mosaic\/ios\/Sources\/BGGeoSessionStream.swift",
       "kind": "BooleanLiteral",
       "offset": 2990,
       "length": 5,
       "value": "false"
     },
     {
-      "filePath": "\/Users\/dc\/projects\/bgeo\/core\/ios\/Sources\/BGGeoSessionStream.swift",
+      "filePath": "\/Users\/dc\/projects\/bgeo\/core\/.worktrees\/moving-mosaic\/ios\/Sources\/BGGeoSessionStream.swift",
       "kind": "BooleanLiteral",
       "offset": 3363,
       "length": 5,
       "value": "false"
     },
     {
-      "filePath": "\/Users\/dc\/projects\/bgeo\/core\/ios\/Sources\/BGGeoSessionStream.swift",
+      "filePath": "\/Users\/dc\/projects\/bgeo\/core\/.worktrees\/moving-mosaic\/ios\/Sources\/BGGeoSessionStream.swift",
       "kind": "BooleanLiteral",
       "offset": 3430,
       "length": 5,
       "value": "false"
     },
     {
-      "filePath": "\/Users\/dc\/projects\/bgeo\/core\/ios\/Sources\/BGGeoSessionStream.swift",
+      "filePath": "\/Users\/dc\/projects\/bgeo\/core\/.worktrees\/moving-mosaic\/ios\/Sources\/BGGeoSessionStream.swift",
       "kind": "BooleanLiteral",
       "offset": 3648,
       "length": 5,
       "value": "false"
     },
     {
-      "filePath": "\/Users\/dc\/projects\/bgeo\/core\/ios\/Sources\/BGGeoSessionStream.swift",
+      "filePath": "\/Users\/dc\/projects\/bgeo\/core\/.worktrees\/moving-mosaic\/ios\/Sources\/BGGeoSessionStream.swift",
       "kind": "BooleanLiteral",
       "offset": 3715,
       "length": 5,
       "value": "false"
     },
     {
-      "filePath": "\/Users\/dc\/projects\/bgeo\/core\/ios\/Sources\/BGGeoSessionStream.swift",
+      "filePath": "\/Users\/dc\/projects\/bgeo\/core\/.worktrees\/moving-mosaic\/ios\/Sources\/BGGeoSessionStream.swift",
       "kind": "BooleanLiteral",
       "offset": 3776,
       "length": 5,
       "value": "false"
     },
     {
-      "filePath": "\/Users\/dc\/projects\/bgeo\/core\/ios\/Sources\/BGGeoSessionStream.swift",
+      "filePath": "\/Users\/dc\/projects\/bgeo\/core\/.worktrees\/moving-mosaic\/ios\/Sources\/BGGeoSessionStream.swift",
       "kind": "BooleanLiteral",
       "offset": 4259,
       "length": 5,
       "value": "false"
     },
     {
-      "filePath": "\/Users\/dc\/projects\/bgeo\/core\/ios\/Sources\/BGGeoSessionStream.swift",
+      "filePath": "\/Users\/dc\/projects\/bgeo\/core\/.worktrees\/moving-mosaic\/ios\/Sources\/BGGeoSessionStream.swift",
       "kind": "BooleanLiteral",
       "offset": 4433,
       "length": 5,
       "value": "false"
     },
     {
-      "filePath": "\/Users\/dc\/projects\/bgeo\/core\/ios\/Sources\/BGGeoSessionStream.swift",
+      "filePath": "\/Users\/dc\/projects\/bgeo\/core\/.worktrees\/moving-mosaic\/ios\/Sources\/BGGeoSessionStream.swift",
       "kind": "BooleanLiteral",
       "offset": 4483,
       "length": 5,
       "value": "false"
     },
     {
-      "filePath": "\/Users\/dc\/projects\/bgeo\/core\/ios\/Sources\/BGGeoSessionStream.swift",
+      "filePath": "\/Users\/dc\/projects\/bgeo\/core\/.worktrees\/moving-mosaic\/ios\/Sources\/BGGeoSessionStream.swift",
       "kind": "BooleanLiteral",
       "offset": 4533,
+      "length": 5,
+      "value": "false"
+    },
+    {
+      "filePath": "\/Users\/dc\/projects\/bgeo\/core\/.worktrees\/moving-mosaic\/ios\/Sources\/BGGeoSessionStream.swift",
+      "kind": "BooleanLiteral",
+      "offset": 5113,
+      "length": 5,
+      "value": "false"
+    },
+    {
+      "filePath": "\/Users\/dc\/projects\/bgeo\/core\/.worktrees\/moving-mosaic\/ios\/Sources\/BGGeoSessionStream.swift",
+      "kind": "BooleanLiteral",
+      "offset": 5179,
       "length": 5,
       "value": "false"
     }

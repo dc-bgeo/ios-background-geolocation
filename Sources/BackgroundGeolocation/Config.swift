@@ -217,6 +217,18 @@ public struct Config {
     /// @platform ios Show the blue background-location pill under Always auth. false + Always also skips the session engine's CLBackgroundActivitySession to hide the pill (beta — needs field tests). No-op on Android.
     public var showsBackgroundLocationIndicator: Bool?
     public var stationaryRadius: Double?
+    /// @platform ios Satellites in the stationary wake ring (entry-monitored regions
+    /// around the parked anchor). 0 disables. Default 8. Each one takes a slot
+    /// from the 20-region iOS budget shared with app geofences: app geofences are
+    /// capped at 19 − wakeRegionRingCount concurrently monitored (11 by default),
+    /// and changing it at runtime re-balances the geofence budget. Counts 1–7 leave
+    /// directional gaps; use 0 or ≥ 8. No-op on Android.
+    public var wakeRegionRingCount: Int?
+    /// @platform ios Distance from the anchor to each satellite center, metres.
+    /// Default 2 × stationaryRadius; values below 2 × stationaryRadius are raised to
+    /// it — satellites use stationaryRadius as their own radius, so a closer ring
+    /// would contain the anchor. No-op on Android.
+    public var wakeRegionRingDistance: Double?
     /// @platform ios Low-power continuous wake distance; independent of the larger region radius. No-op on Android.
     public var stationaryDistanceFilter: Double?
     /// @platform ios Hold a background task while backgrounded+stationary. No-op on Android.
@@ -265,6 +277,14 @@ public struct Config {
     /// Keep a low-power location request alive while stationary (fast wake source
     /// on trip start). Default true; false restores fully-sleep-GPS (slower wake).
     public var stationaryKeepAlive: Bool?
+    /// @platform android Drop the foreground service while parked and take periodic
+    /// Doze-proof fixes instead; slower trip-start wake. Default false. No-op on iOS.
+    public var dormantOnStationary: Bool?
+    /// @platform android Seconds between dormant wakes (Doze floors at ~9-15 min). Default 1800. No-op on iOS.
+    public var dormantWakeInterval: Int?
+    /// @platform android Seconds the low-power stationary stream stays up after a park before the
+    /// foreground service is dropped; 0 = immediate. Default 120. No-op on iOS.
+    public var dormantGrace: Int?
     /// Upload a compact native diagnostic snapshot in every point's `extras`
     /// (counters, app/motion state, manager config) — test devices only.
     public var diagnosticExtras: Bool?
@@ -313,6 +333,8 @@ public struct Config {
         stopTimeout: Int? = nil,
         showsBackgroundLocationIndicator: Bool? = nil,
         stationaryRadius: Double? = nil,
+        wakeRegionRingCount: Int? = nil,
+        wakeRegionRingDistance: Double? = nil,
         stationaryDistanceFilter: Double? = nil,
         preventSuspend: Bool? = nil,
         heartbeatInterval: Int? = nil,
@@ -342,6 +364,9 @@ public struct Config {
         maxRecordsToPersist: Int? = nil,
         authorization: AuthorizationConfig? = nil,
         stationaryKeepAlive: Bool? = nil,
+        dormantOnStationary: Bool? = nil,
+        dormantWakeInterval: Int? = nil,
+        dormantGrace: Int? = nil,
         diagnosticExtras: Bool? = nil,
         useSessionEngine: Bool? = nil,
         geofenceProximityRadius: Double? = nil,
@@ -373,6 +398,8 @@ public struct Config {
         self.stopTimeout = stopTimeout
         self.showsBackgroundLocationIndicator = showsBackgroundLocationIndicator
         self.stationaryRadius = stationaryRadius
+        self.wakeRegionRingCount = wakeRegionRingCount
+        self.wakeRegionRingDistance = wakeRegionRingDistance
         self.stationaryDistanceFilter = stationaryDistanceFilter
         self.preventSuspend = preventSuspend
         self.heartbeatInterval = heartbeatInterval
@@ -402,6 +429,9 @@ public struct Config {
         self.maxRecordsToPersist = maxRecordsToPersist
         self.authorization = authorization
         self.stationaryKeepAlive = stationaryKeepAlive
+        self.dormantOnStationary = dormantOnStationary
+        self.dormantWakeInterval = dormantWakeInterval
+        self.dormantGrace = dormantGrace
         self.diagnosticExtras = diagnosticExtras
         self.useSessionEngine = useSessionEngine
         self.geofenceProximityRadius = geofenceProximityRadius
@@ -442,6 +472,8 @@ public struct Config {
         if let stopTimeout { dictionary["stopTimeout"] = stopTimeout }
         if let showsBackgroundLocationIndicator { dictionary["showsBackgroundLocationIndicator"] = showsBackgroundLocationIndicator }
         if let stationaryRadius { dictionary["stationaryRadius"] = stationaryRadius }
+        if let wakeRegionRingCount { dictionary["wakeRegionRingCount"] = wakeRegionRingCount }
+        if let wakeRegionRingDistance { dictionary["wakeRegionRingDistance"] = wakeRegionRingDistance }
         if let stationaryDistanceFilter { dictionary["stationaryDistanceFilter"] = stationaryDistanceFilter }
         if let preventSuspend { dictionary["preventSuspend"] = preventSuspend }
         if let heartbeatInterval { dictionary["heartbeatInterval"] = heartbeatInterval }
@@ -483,6 +515,9 @@ public struct Config {
             dictionary["authorization"] = (authorization.strategy == Config.clearString) ? NSNull() : authorization.toDictionary()
         }
         if let stationaryKeepAlive { dictionary["stationaryKeepAlive"] = stationaryKeepAlive }
+        if let dormantOnStationary { dictionary["dormantOnStationary"] = dormantOnStationary }
+        if let dormantWakeInterval { dictionary["dormantWakeInterval"] = dormantWakeInterval }
+        if let dormantGrace { dictionary["dormantGrace"] = dormantGrace }
         if let diagnosticExtras { dictionary["diagnosticExtras"] = diagnosticExtras }
         if let useSessionEngine { dictionary["useSessionEngine"] = useSessionEngine }
         if let geofenceProximityRadius { dictionary["geofenceProximityRadius"] = geofenceProximityRadius }

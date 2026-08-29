@@ -411,6 +411,9 @@ SWIFT_CLASS_NAMED("BGGeoSessionStream")
 @property (nonatomic, readonly) BOOL wakeHoldActive;
 @property (nonatomic, readonly) BOOL insufficientlyInUse;
 @property (nonatomic, copy) void (^ _Nullable onDegradedChange)(BOOL);
+@property (nonatomic, readonly) BOOL deliveryInsufficientlyInUse;
+@property (nonatomic, readonly) BOOL deliveryUnavailable;
+@property (nonatomic, copy) void (^ _Nullable onDeliveryRefusedChange)(BOOL);
 - (void)updateServiceSessionWithAuthorizedAlways:(BOOL)authorizedAlways;
 - (void)updateBackgroundActivityWithNeeded:(BOOL)needed;
 - (void)beginWakeBackgroundActivityHold;
