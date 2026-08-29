@@ -1695,105 +1695,105 @@
   },
   "ConstValues": [
     {
-      "filePath": "\/Users\/dc\/projects\/bgeo\/core\/.worktrees\/moving-mosaic\/ios\/Sources\/BGGeoLicense.swift",
+      "filePath": "\/Users\/dc\/projects\/bgeo\/core\/ios\/Sources\/BGGeoLicense.swift",
       "kind": "Array",
       "offset": 1045,
       "length": 111,
       "value": "[\"3419211b1a8911633439d2f8d621c4261f72bb1782c8f5060acc419336c2f2e1\"]"
     },
     {
-      "filePath": "\/Users\/dc\/projects\/bgeo\/core\/.worktrees\/moving-mosaic\/ios\/Sources\/BGGeoLicenseBanner.swift",
+      "filePath": "\/Users\/dc\/projects\/bgeo\/core\/ios\/Sources\/BGGeoLicenseBanner.swift",
       "kind": "BooleanLiteral",
       "offset": 820,
       "length": 5,
       "value": "false"
     },
     {
-      "filePath": "\/Users\/dc\/projects\/bgeo\/core\/.worktrees\/moving-mosaic\/ios\/Sources\/BGGeoSessionStream.swift",
+      "filePath": "\/Users\/dc\/projects\/bgeo\/core\/ios\/Sources\/BGGeoSessionStream.swift",
       "kind": "BooleanLiteral",
       "offset": 2690,
       "length": 5,
       "value": "false"
     },
     {
-      "filePath": "\/Users\/dc\/projects\/bgeo\/core\/.worktrees\/moving-mosaic\/ios\/Sources\/BGGeoSessionStream.swift",
+      "filePath": "\/Users\/dc\/projects\/bgeo\/core\/ios\/Sources\/BGGeoSessionStream.swift",
       "kind": "BooleanLiteral",
       "offset": 2990,
       "length": 5,
       "value": "false"
     },
     {
-      "filePath": "\/Users\/dc\/projects\/bgeo\/core\/.worktrees\/moving-mosaic\/ios\/Sources\/BGGeoSessionStream.swift",
+      "filePath": "\/Users\/dc\/projects\/bgeo\/core\/ios\/Sources\/BGGeoSessionStream.swift",
       "kind": "BooleanLiteral",
       "offset": 3363,
       "length": 5,
       "value": "false"
     },
     {
-      "filePath": "\/Users\/dc\/projects\/bgeo\/core\/.worktrees\/moving-mosaic\/ios\/Sources\/BGGeoSessionStream.swift",
+      "filePath": "\/Users\/dc\/projects\/bgeo\/core\/ios\/Sources\/BGGeoSessionStream.swift",
       "kind": "BooleanLiteral",
       "offset": 3430,
       "length": 5,
       "value": "false"
     },
     {
-      "filePath": "\/Users\/dc\/projects\/bgeo\/core\/.worktrees\/moving-mosaic\/ios\/Sources\/BGGeoSessionStream.swift",
+      "filePath": "\/Users\/dc\/projects\/bgeo\/core\/ios\/Sources\/BGGeoSessionStream.swift",
       "kind": "BooleanLiteral",
       "offset": 3648,
       "length": 5,
       "value": "false"
     },
     {
-      "filePath": "\/Users\/dc\/projects\/bgeo\/core\/.worktrees\/moving-mosaic\/ios\/Sources\/BGGeoSessionStream.swift",
+      "filePath": "\/Users\/dc\/projects\/bgeo\/core\/ios\/Sources\/BGGeoSessionStream.swift",
       "kind": "BooleanLiteral",
       "offset": 3715,
       "length": 5,
       "value": "false"
     },
     {
-      "filePath": "\/Users\/dc\/projects\/bgeo\/core\/.worktrees\/moving-mosaic\/ios\/Sources\/BGGeoSessionStream.swift",
+      "filePath": "\/Users\/dc\/projects\/bgeo\/core\/ios\/Sources\/BGGeoSessionStream.swift",
       "kind": "BooleanLiteral",
       "offset": 3776,
       "length": 5,
       "value": "false"
     },
     {
-      "filePath": "\/Users\/dc\/projects\/bgeo\/core\/.worktrees\/moving-mosaic\/ios\/Sources\/BGGeoSessionStream.swift",
+      "filePath": "\/Users\/dc\/projects\/bgeo\/core\/ios\/Sources\/BGGeoSessionStream.swift",
       "kind": "BooleanLiteral",
       "offset": 4259,
       "length": 5,
       "value": "false"
     },
     {
-      "filePath": "\/Users\/dc\/projects\/bgeo\/core\/.worktrees\/moving-mosaic\/ios\/Sources\/BGGeoSessionStream.swift",
+      "filePath": "\/Users\/dc\/projects\/bgeo\/core\/ios\/Sources\/BGGeoSessionStream.swift",
       "kind": "BooleanLiteral",
       "offset": 4433,
       "length": 5,
       "value": "false"
     },
     {
-      "filePath": "\/Users\/dc\/projects\/bgeo\/core\/.worktrees\/moving-mosaic\/ios\/Sources\/BGGeoSessionStream.swift",
+      "filePath": "\/Users\/dc\/projects\/bgeo\/core\/ios\/Sources\/BGGeoSessionStream.swift",
       "kind": "BooleanLiteral",
       "offset": 4483,
       "length": 5,
       "value": "false"
     },
     {
-      "filePath": "\/Users\/dc\/projects\/bgeo\/core\/.worktrees\/moving-mosaic\/ios\/Sources\/BGGeoSessionStream.swift",
+      "filePath": "\/Users\/dc\/projects\/bgeo\/core\/ios\/Sources\/BGGeoSessionStream.swift",
       "kind": "BooleanLiteral",
       "offset": 4533,
       "length": 5,
       "value": "false"
     },
     {
-      "filePath": "\/Users\/dc\/projects\/bgeo\/core\/.worktrees\/moving-mosaic\/ios\/Sources\/BGGeoSessionStream.swift",
+      "filePath": "\/Users\/dc\/projects\/bgeo\/core\/ios\/Sources\/BGGeoSessionStream.swift",
       "kind": "BooleanLiteral",
       "offset": 5113,
       "length": 5,
       "value": "false"
     },
     {
-      "filePath": "\/Users\/dc\/projects\/bgeo\/core\/.worktrees\/moving-mosaic\/ios\/Sources\/BGGeoSessionStream.swift",
+      "filePath": "\/Users\/dc\/projects\/bgeo\/core\/ios\/Sources\/BGGeoSessionStream.swift",
       "kind": "BooleanLiteral",
       "offset": 5179,
       "length": 5,

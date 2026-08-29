@@ -229,6 +229,10 @@ public struct Config {
     /// it — satellites use stationaryRadius as their own radius, so a closer ring
     /// would contain the anchor. No-op on Android.
     public var wakeRegionRingDistance: Double?
+    /// @platform ios Experimental. Lay a chain of entry-monitored wake regions ahead along the course while moving, so a swipe-killed (never-in-use) process is woken by each crossing instead of only by the 5-min-throttled significant-change service. Default false. No-op on Android.
+    public var wakeTrailEnabled: Bool?
+    /// @platform ios Experimental. Regions in the wake trail (spaced 200 m, radius 100 m). Default 8, cap 18, 0 disables. Shares the reserved slots with the wake ring: app geofences are capped at 19 − max(wakeRegionRingCount, wakeTrailCount). No-op on Android.
+    public var wakeTrailCount: Int?
     /// @platform ios Low-power continuous wake distance; independent of the larger region radius. No-op on Android.
     public var stationaryDistanceFilter: Double?
     /// @platform ios Hold a background task while backgrounded+stationary. No-op on Android.
@@ -335,6 +339,8 @@ public struct Config {
         stationaryRadius: Double? = nil,
         wakeRegionRingCount: Int? = nil,
         wakeRegionRingDistance: Double? = nil,
+        wakeTrailEnabled: Bool? = nil,
+        wakeTrailCount: Int? = nil,
         stationaryDistanceFilter: Double? = nil,
         preventSuspend: Bool? = nil,
         heartbeatInterval: Int? = nil,
@@ -400,6 +406,8 @@ public struct Config {
         self.stationaryRadius = stationaryRadius
         self.wakeRegionRingCount = wakeRegionRingCount
         self.wakeRegionRingDistance = wakeRegionRingDistance
+        self.wakeTrailEnabled = wakeTrailEnabled
+        self.wakeTrailCount = wakeTrailCount
         self.stationaryDistanceFilter = stationaryDistanceFilter
         self.preventSuspend = preventSuspend
         self.heartbeatInterval = heartbeatInterval
@@ -474,6 +482,8 @@ public struct Config {
         if let stationaryRadius { dictionary["stationaryRadius"] = stationaryRadius }
         if let wakeRegionRingCount { dictionary["wakeRegionRingCount"] = wakeRegionRingCount }
         if let wakeRegionRingDistance { dictionary["wakeRegionRingDistance"] = wakeRegionRingDistance }
+        if let wakeTrailEnabled { dictionary["wakeTrailEnabled"] = wakeTrailEnabled }
+        if let wakeTrailCount { dictionary["wakeTrailCount"] = wakeTrailCount }
         if let stationaryDistanceFilter { dictionary["stationaryDistanceFilter"] = stationaryDistanceFilter }
         if let preventSuspend { dictionary["preventSuspend"] = preventSuspend }
         if let heartbeatInterval { dictionary["heartbeatInterval"] = heartbeatInterval }
