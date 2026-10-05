@@ -40,10 +40,6 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)startTracking;
 - (void)stopTracking;
 
-/// Non-nil LICENSE_* code when the current build/license blocks tracking; nil
-/// when licensed (or a debuggable/simulator evaluation build). Re-evaluated on
-/// applyConfig (the config carries the `license` key).
-- (nullable NSString *)licenseErrorCode;
 
 /// Escalating permission request (WhenInUse -> Always per config). Resolves a
 /// numeric AUTHORIZATION_STATUS_*.

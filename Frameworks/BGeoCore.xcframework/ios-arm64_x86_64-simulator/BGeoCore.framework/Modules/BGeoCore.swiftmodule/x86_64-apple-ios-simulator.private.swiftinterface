@@ -4,23 +4,10 @@
 // swift-module-flags-ignorable: -no-verify-emitted-module-interface -formal-cxx-interoperability-mode=off -interface-compiler-version 6.3.3
 @_exported import BGeoCore
 import CoreLocation
-import CryptoKit
-import Foundation
 import Swift
-import UIKit
 import _Concurrency
 import _StringProcessing
 import _SwiftConcurrencyShims
-@_inheritsConvenienceInitializers @objc(BGGeoLicense) final public class BGGeoLicense : ObjectiveC.NSObject {
-  @objc public static func check(token: Swift.String?, bundleId: Swift.String, teamId: Swift.String?, isDevelopmentBuild: Swift.Bool, sdkBuildDate: Swift.Int64) -> Swift.String?
-  @objc override dynamic public init()
-  @objc deinit
-}
-@_inheritsConvenienceInitializers @objc(BGGeoLicenseBanner) final public class BGGeoLicenseBanner : ObjectiveC.NSObject {
-  @objc public static func show(code: Swift.String)
-  @objc override dynamic public init()
-  @objc deinit
-}
 @_inheritsConvenienceInitializers @objc(BGGeoSessionStream) final public class BGGeoSessionStream : ObjectiveC.NSObject {
   @objc final public var isRunning: Swift.Bool {
     get
