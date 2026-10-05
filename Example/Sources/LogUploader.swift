@@ -1,8 +1,8 @@
 // Single log pipeline: `LogUploader.logEvent()` writes the structured line
 // into the app store (Logs screen) AND into the SDK's own persisted log
-// queue via `BackgroundGeolocation.logger`, which survives app kills and
-// uploads batches to `/device/logs` with the engine's own auth — unlike an
-// app-only buffer that dies with the process.
+// queue via `BackgroundGeolocation.logger`, which survives app kills —
+// unlike an app-only buffer that dies with the process. (The SDK only
+// uploads that queue if an app configures `logUrl`; this example sets none.)
 //
 // Swift port of `react-native/example/src/logUploader.ts`; `flutter/example/
 // lib/src/log_uploader.dart` is the same port for Flutter. This is the
@@ -34,7 +34,7 @@ import BackgroundGeolocation
 @MainActor
 public enum LogUploader {
     /// Test seam: `BackgroundGeolocation.logger` is a `@MainActor` value type
-    /// with no protocol to substitute (same reasoning as `DeviceLink.applyConfig`
+    /// with no protocol to substitute (same reasoning as `ConfigStore.applyConfig`
     /// and `Geofences`'s `*Call` properties) — tests inject a stub through
     /// this closure instead of touching the real SDK/engine.
     static var write: (LogLevel, String, [String: Any]) -> Void = { level, message, data in

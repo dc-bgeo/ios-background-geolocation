@@ -163,12 +163,6 @@ public struct DistractionDetectionConfig {
 /// property — an untouched `Config()` produces an empty dictionary and
 /// changes nothing. To express "unset this key" instead, set the property to
 /// its `clear*` sentinel (see `clearString`).
-///
-/// The license key is NOT a config option — set it in the app's Info.plist
-/// (`BGeoLicense`), read at launch before this API is used. In a RELEASE
-/// build a bad key makes `ready()`/`start()` reject with a `LICENSE_*` code;
-/// debuggable builds / the iOS simulator always run unlicensed (evaluation),
-/// whatever the key state.
 public struct Config {
     public var locationAuthorizationRequest: String?
     public var locationAuthorizationAlert: [String: String]?

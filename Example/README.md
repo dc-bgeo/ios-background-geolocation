@@ -1,10 +1,10 @@
 # BGeo Example (iOS)
 
 A console app for developing and debugging the BGeo Swift SDK — not a
-production app. It exercises every working `Config` key, links to the BGeo
-web console with a registration code, shows the live track and geofences on
-a map, and streams structured logs. It's also the source of the screenshots
-used in the SDK's docs.
+production app. It exercises every working `Config` key, shows the live track
+and geofences on a map, and streams structured logs. Everything stays on the
+device: there is no server to link to and no account to create. It's also the
+source of the screenshots used in the SDK's docs.
 
 It has RN and Flutter counterparts (`react-native/example/`,
 `flutter/example/`) built to the same design, so the three platforms stay at
@@ -30,24 +30,23 @@ or open `BGeoExample.xcodeproj` in Xcode and run the `BGeoExample` scheme.
 Tests: see the root `README.md`'s "Running the tests" section — same command,
 this project's own scheme.
 
-## Linking to the web console
+## Logs, history and geofences
 
-The Map tab shows a track and any geofences; the Logs tab mirrors what the
-web console's device page would show. To see events show up there too:
+- **Logs** merges the app's own structured lines with the SDK's persisted
+  engine log (`getLog()`).
+- **Map → from/to range** filters the track recorded in this session.
+- **Geofences** are created with a long-press on the map, edited or deleted by
+  tapping a pin, and live only in the SDK on the device.
 
-1. Sign in to the BGeo web console and go to **Dashboard → Registration
-   codes** to create one.
-2. Open the Settings tab in this app, enter the code under **Debug
-   console**, and tap **Link device**. A wrong or expired code surfaces the
-   server's own error message on screen (e.g. "invalid or expired code").
-3. Once linked, locations, logs and geofence changes upload to the linked
-   server automatically.
+The SDK's HTTP uploader (`url`, `logUrl`, `authorization`) is not configured
+by this app. To try it against your own endpoint, add those keys to
+`baseConfig` in `Sources/BGeoExampleApp.swift`.
 
 ### What the logs redact, and what they can't
 
-The `onAuthorization` event body carries live JWTs, so it is reduced to
-`{success, hasAccessToken, hasRefreshToken}` before it reaches the Logs
-screen, the on-device log or `/device/logs`
+The `onAuthorization` event body carries live JWTs (when `authorization` is
+configured), so it is reduced to `{success, hasAccessToken, hasRefreshToken}`
+before it reaches the Logs screen or the on-device log
 (`redactedAuthorizationLogData`, `Sources/BGeoExampleApp.swift`).
 
 That protection is **by key**: it recognises a credential by the name of the
@@ -57,19 +56,15 @@ error body would be logged verbatim. It is a limit of the approach rather
 than a defect in it, and has never been claimed as covered. Keep credentials
 out of error bodies on the server side.
 
-## Licence
+## No license key
 
-This app ships **no** `BGeoLicense` key, and doesn't need one: a debuggable
-build (which is what `xcodebuild ... build`/Xcode's Run both produce) always
-runs the SDK unlicensed/evaluation mode, on both the simulator and a real
-device. See the root `README.md`'s "Licence key" section for how licensing
-works in a Release build.
+The SDK is free and needs no license key, so this app ships none — debug and
+release builds behave the same.
 
 ## What's here, and what isn't
 
-Covers phase 3 of the SDK spec: three tabs (Map / Logs / Settings), device
-linking, geofence CRUD with server sync, live logs, schema-driven settings,
-MapKit (not a paid maps provider). It deliberately does **not** cover
+Three tabs (Map / Logs / Settings), on-device geofence CRUD, live logs,
+schema-driven settings, MapKit (not a paid maps provider). It deliberately does **not** cover
 publishing this app anywhere, docs pages, or device-acceptance protocols —
 those are separate phases of the spec.
 

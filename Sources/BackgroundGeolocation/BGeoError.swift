@@ -3,10 +3,22 @@ import Foundation
 /// Typed wrapper over the engine's `(code, message)` reject pairs. Unrecognised
 /// codes map to `.unknown` rather than being swallowed, so new engine codes
 /// remain diagnosable.
+///
+/// The four `license*` cases are deprecated: the SDK is free, the engine no
+/// longer performs a license check, and nothing produces these codes any
+/// more. They are kept only so existing `switch`es keep compiling.
 public enum BGeoError: Error, Equatable {
+    /// Deprecated — never emitted (the SDK needs no license key).
+    @available(*, deprecated, message: "No longer emitted — the SDK is free and needs no license key. Will be removed in the next major.")
     case licenseMissing(message: String)
+    /// Deprecated — never emitted (the SDK needs no license key).
+    @available(*, deprecated, message: "No longer emitted — the SDK is free and needs no license key. Will be removed in the next major.")
     case licenseInvalid(message: String)
+    /// Deprecated — never emitted (the SDK needs no license key).
+    @available(*, deprecated, message: "No longer emitted — the SDK is free and needs no license key. Will be removed in the next major.")
     case licenseExpired(message: String)
+    /// Deprecated — never emitted (the SDK needs no license key).
+    @available(*, deprecated, message: "No longer emitted — the SDK is free and needs no license key. Will be removed in the next major.")
     case licenseAppMismatch(message: String)
     case disabled(message: String)
     case notFound(message: String)

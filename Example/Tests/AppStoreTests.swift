@@ -61,46 +61,7 @@ final class AppStoreTests: XCTestCase {
         XCTAssertEqual(store.logs.count, 1)
     }
 
-    // MARK: - setLink partial-update semantics
-    //
-    // appStore.ts: `setLink(link: Partial<LinkState>) { setState({link: {...state.link, ...link}}) }`
-    // — a genuine partial merge onto the existing link, so passing only
-    // `linked`/`deviceId` must leave `serverUrl` untouched. Verified against
-    // appStore.ts, not assumed from the brief.
-
-    func testSetLinkPreservesServerUrlWhenOnlyLinkedChanges() {
-        let store = AppStore()
-        store.setLink(serverUrl: "https://example.test", linked: false)
-
-        store.setLink(linked: true)
-
-        XCTAssertEqual(store.link.serverUrl, "https://example.test")
-        XCTAssertTrue(store.link.linked)
-    }
-
-    func testSetLinkPreservesServerUrlWhenOnlyDeviceIdChanges() {
-        let store = AppStore()
-        store.setLink(serverUrl: "https://example.test", linked: true)
-
-        store.setLink(deviceId: "device-123")
-
-        XCTAssertEqual(store.link.serverUrl, "https://example.test")
-        XCTAssertTrue(store.link.linked)
-        XCTAssertEqual(store.link.deviceId, "device-123")
-    }
-
-    func testSetLinkClearDeviceIdExplicitlyNilsIt() {
-        let store = AppStore()
-        store.setLink(serverUrl: "https://example.test", linked: true, deviceId: "device-123")
-
-        store.setLink(linked: false, clearDeviceId: true)
-
-        XCTAssertEqual(store.link.serverUrl, "https://example.test")
-        XCTAssertFalse(store.link.linked)
-        XCTAssertNil(store.link.deviceId)
-    }
-
-    // MARK: - setStatus partial-update semantics (same shape as setLink)
+    // MARK: - setStatus partial-update semantics
 
     func testSetStatusPreservesUntouchedFields() {
         let store = AppStore()
@@ -115,13 +76,6 @@ final class AppStoreTests: XCTestCase {
     }
 
     // MARK: - defaults
-
-    func testLinkDefaults() {
-        let store = AppStore()
-        XCTAssertEqual(store.link.serverUrl, "https://app.bgeo.dev")
-        XCTAssertFalse(store.link.linked)
-        XCTAssertNil(store.link.deviceId)
-    }
 
     func testStatusDefaults() {
         let store = AppStore()

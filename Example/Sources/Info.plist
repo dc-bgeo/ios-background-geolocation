@@ -40,7 +40,7 @@
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 	</array>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>BGeo Example shows your location on the map and streams it to the debug console.</string>
+	<string>BGeo Example shows your location on the map.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>BGeo Example tracks your location in the background to demonstrate and debug the SDK.</string>
 	<key>NSMotionUsageDescription</key>

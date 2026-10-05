@@ -24,8 +24,9 @@ public final class ConfigStore: ObservableObject {
 
     private let userDefaults: UserDefaults
 
-    /// Test seam, same shape as `DeviceLink.applyConfig` (see that file's doc
-    /// comment for why a closure rather than a protocol/global swap).
+    /// Test seam: `BackgroundGeolocation` is a `@MainActor enum` with static
+    /// members, so it cannot be swapped for a fake; tests inject a closure
+    /// here and assert on exactly the `Config` handed to `setConfig`.
     var applyConfig: (Config) async throws -> Void = { try await BackgroundGeolocation.setConfig($0) }
 
     public init(userDefaults: UserDefaults = .standard) {

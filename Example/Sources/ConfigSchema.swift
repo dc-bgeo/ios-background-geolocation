@@ -35,14 +35,11 @@
 //     different kind of UI this schema's type system doesn't (and, per
 //     RN/Flutter precedent, isn't meant to) express.
 //   - `url`, `logUrl`, `authorization`: the upload endpoint's identity and
-//     credentials. These are exclusively owned by `DeviceLink` (the Settings
-//     screen's "Debug console" link section) — editing them independently
-//     here would desync the device link (e.g. changing `url` without
-//     rotating `authorization` breaks the linked server relationship).
-//     RN/Flutter draw the same line for the same reason. `method` does NOT
-//     belong on this list — `DeviceLink` never sets `Config.method` (its
-//     `deviceFetch`'s `method` parameter is a distinct, local thing) — so
-//     `method` is schema'd normally below, not excluded.
+//     credentials. The example app ships with no upload server, so nothing
+//     sets them; an app that wants HTTP sync configures them in code
+//     (e.g. in `baseConfig`), where the endpoint and its credentials stay
+//     together. `method` is a plain HTTP verb choice and is schema'd
+//     normally below, not excluded.
 
 import Foundation
 import BackgroundGeolocation
@@ -309,8 +306,7 @@ public let configSections: [ConfigSection] = [
         // CORRECTED — engine default -1/unbatched (core/ios/Sources/BGGeoHttpStore.mm:74,183),
         // not the RN/Flutter schemas' 50.
         ConfigField(
-            key: "maxBatchSize", label: "Max batch size", type: .number, defaultValue: .int(-1),
-            hint: "DeviceLink sets 50 once linked, independently of this default"
+            key: "maxBatchSize", label: "Max batch size", type: .number, defaultValue: .int(-1)
         ),
         // CORRECTED — engine default 30000 (core/ios/Sources/BGGeoHttpStore.mm:185), not the RN/Flutter schemas' 60000.
         ConfigField(key: "httpTimeoutMs", label: "HTTP timeout", type: .number, defaultValue: .int(30000), unit: "ms"),

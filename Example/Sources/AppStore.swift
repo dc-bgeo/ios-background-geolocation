@@ -1,6 +1,5 @@
-// Tiny shared store for the example app: structured log lines (same shape as
-// /device/logs events), breadcrumb points, the SDK geofence set, engine
-// status and the device-link state. `@Published` properties so SwiftUI
+// Tiny shared store for the example app: structured log lines, breadcrumb
+// points, the SDK geofence set and engine status. `@Published` properties so SwiftUI
 // screens can bind directly via `@EnvironmentObject`/`@ObservedObject`.
 //
 // This is a Swift port of `react-native/example/src/appStore.ts` (the
@@ -14,8 +13,7 @@ public enum LogLevel: String {
     case verbose, debug, info, warn, error
 }
 
-/// Exactly the event shape uploaded to /device/logs — what you see in the
-/// app is what the web console shows.
+/// One structured log line, as shown on the Logs screen.
 public struct LogLine {
     public var ts: String // ISO
     public var level: LogLevel
@@ -86,18 +84,6 @@ public struct Point {
     }
 }
 
-public struct LinkState {
-    public var serverUrl: String = "https://app.bgeo.dev"
-    public var linked = false
-    public var deviceId: String?
-
-    public init(serverUrl: String = "https://app.bgeo.dev", linked: Bool = false, deviceId: String? = nil) {
-        self.serverUrl = serverUrl
-        self.linked = linked
-        self.deviceId = deviceId
-    }
-}
-
 public struct EngineStatus {
     public var ready = false
     public var enabled = false
@@ -124,7 +110,6 @@ public final class AppStore: ObservableObject {
     @Published public private(set) var logs: [LogLine] = []
     @Published public private(set) var points: [Point] = []
     @Published public private(set) var geofences: [Geofence] = []
-    @Published public private(set) var link = LinkState()
     @Published public private(set) var status = EngineStatus()
 
     public init() {}
@@ -156,23 +141,6 @@ public final class AppStore: ObservableObject {
 
     public func setGeofences(_ geofences: [Geofence]) {
         self.geofences = geofences
-    }
-
-    /// Partial update: only the parameters passed override the current link
-    /// state (mirrors `appStore.ts`'s `setLink(link: Partial<LinkState>)`).
-    /// `deviceId` needs an explicit clear flag, not a plain optional, because
-    /// Swift can't distinguish "omitted" from "passed nil" through a single
-    /// `String?` parameter — same reasoning as `app_store.dart`'s `LinkState.copyWith`.
-    public func setLink(serverUrl: String? = nil, linked: Bool? = nil, deviceId: String? = nil, clearDeviceId: Bool = false) {
-        var next = link
-        if let serverUrl { next.serverUrl = serverUrl }
-        if let linked { next.linked = linked }
-        if clearDeviceId {
-            next.deviceId = nil
-        } else if let deviceId {
-            next.deviceId = deviceId
-        }
-        link = next
     }
 
     /// Partial update, same shape as `setStatus(status: Partial<EngineStatus>)`.

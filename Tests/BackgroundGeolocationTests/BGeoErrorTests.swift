@@ -2,7 +2,10 @@ import XCTest
 @testable import BackgroundGeolocation
 
 final class BGeoErrorTests: XCTestCase {
-    func testLicenseCodesMapToTypedCases() {
+    // The license cases are deprecated (never emitted since the SDK went
+    // free) but still public; keep their mapping stable until removal.
+    @available(*, deprecated)
+    func testDeprecatedLicenseCodesStillMapToTypedCases() {
         XCTAssertEqual(BGeoError(code: "LICENSE_MISSING", message: "m"), .licenseMissing(message: "m"))
         XCTAssertEqual(BGeoError(code: "LICENSE_INVALID", message: "m"), .licenseInvalid(message: "m"))
         XCTAssertEqual(BGeoError(code: "LICENSE_EXPIRED", message: "m"), .licenseExpired(message: "m"))

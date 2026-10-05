@@ -21,48 +21,20 @@ final class FacadeLifecycleTests: XCTestCase {
         XCTAssertEqual(state.enabled, false)
     }
 
-    func testReadyThrowsTheEnginesLicenseCode() async {
-        engine.stubbedLicenseError = "LICENSE_EXPIRED"
-        do {
-            _ = try await BackgroundGeolocation.ready(Config())
-            XCTFail("expected a license error")
-        } catch let error as BGeoError {
-            XCTAssertEqual(error, .licenseExpired(message: error.message))
-            XCTAssertEqual(error.code, "LICENSE_EXPIRED")
-        } catch {
-            XCTFail("expected BGeoError, got \(error)")
-        }
-    }
-
-    func testReadyStillAppliedTheConfigBeforeTheLicenseCheckFailed() async {
-        // Order matters: the engine reads the license key out of the config.
-        engine.stubbedLicenseError = "LICENSE_MISSING"
-        _ = try? await BackgroundGeolocation.ready(Config(debug: true))
-        XCTAssertEqual(engine.appliedConfigs.count, 1)
-    }
-
-    func testStartChecksTheLicenseBeforeStartingTracking() async {
-        engine.stubbedLicenseError = "LICENSE_APP_MISMATCH"
-        _ = try? await BackgroundGeolocation.start()
-        XCTAssertEqual(engine.startTrackingCallCount, 0, "tracking must not start on a bad license")
-    }
-
-    func testStartStartsTrackingWhenLicensed() async throws {
+    func testStartStartsTracking() async throws {
         engine.stubbedState = ["enabled": true]
         let state = try await BackgroundGeolocation.start()
         XCTAssertEqual(engine.startTrackingCallCount, 1)
         XCTAssertEqual(state.enabled, true)
     }
 
-    func testStopNeverConsultsTheLicense() async throws {
-        engine.stubbedLicenseError = "LICENSE_EXPIRED"
+    func testStopStopsTracking() async throws {
         engine.stubbedState = ["enabled": false]
         _ = try await BackgroundGeolocation.stop()
         XCTAssertEqual(engine.stopTrackingCallCount, 1)
     }
 
-    func testSetConfigNeverConsultsTheLicense() async throws {
-        engine.stubbedLicenseError = "LICENSE_EXPIRED"
+    func testSetConfigAppliesConfig() async throws {
         engine.stubbedState = ["enabled": false]
         _ = try await BackgroundGeolocation.setConfig(Config(debug: false))
         XCTAssertEqual(engine.appliedConfigs.count, 1)
@@ -126,14 +98,14 @@ final class FacadeLifecycleTests: XCTestCase {
     }
 
     func testOnLocationErrorDeliversTheEnginesCodeAndMessage() {
-        // The engine's only way of reporting a bad license on `startWatch`,
-        // and every failed watch tick thereafter (`BGGeoEngine.mm:2653-2655`,
-        // `:2689`) — before this API existed, an app had no way to reach it.
+        // The engine's only way of reporting a failed watch tick
+        // (`BGGeoEngine.mm:2689`) — before this API existed, an app had no
+        // way to reach it.
         var received: LocationErrorEvent?
         _ = BackgroundGeolocation.onLocationError { received = $0 }
-        engine.emit("locationerror", ["code": "LICENSE_EXPIRED", "message": "Tracking is not licensed"])
-        XCTAssertEqual(received?.code, "LICENSE_EXPIRED")
-        XCTAssertEqual(received?.message, "Tracking is not licensed")
+        engine.emit("locationerror", ["code": "408", "message": "Location request timed out"])
+        XCTAssertEqual(received?.code, "408")
+        XCTAssertEqual(received?.message, "Location request timed out")
     }
 
     func testOnLocationErrorDeliversAnNSNumberCodedCoreLocationFailureRatherThanDroppingIt() {
@@ -142,7 +114,7 @@ final class FacadeLifecycleTests: XCTestCase {
         // NSNumber, not a String. Before the fix this decoded to nil and
         // onLocationError silently dropped every one of these — the common
         // case the event exists to report — while still delivering the rarer
-        // license/watch-tick String-coded ones.
+        // watch-tick String-coded ones.
         var received: LocationErrorEvent?
         _ = BackgroundGeolocation.onLocationError { received = $0 }
         engine.emit("locationerror", ["code": 1 as NSNumber, "message": "denied", "recovering": true])

@@ -14,7 +14,6 @@ protocol Engine: AnyObject {
     var odometer: Double { get }
 
     func applyConfig(_ config: [String: Any])
-    func licenseErrorCode() -> String?
     func stateDictionary() -> [String: Any]
     func startTracking()
     func stopTracking()
@@ -90,10 +89,6 @@ final class LiveEngine: Engine {
 
     func applyConfig(_ config: [String: Any]) {
         BGGeoEngine.shared.applyConfig(config)
-    }
-
-    func licenseErrorCode() -> String? {
-        BGGeoEngine.shared.licenseErrorCode()
     }
 
     func stateDictionary() -> [String: Any] {

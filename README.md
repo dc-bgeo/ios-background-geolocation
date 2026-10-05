@@ -8,6 +8,10 @@ The engine itself ships as a prebuilt binary vendored at
 throughout, and mirrors the vocabulary of `react-native/src/index.ts` so a
 developer moving between BGeo SDKs finds the same method and event names.
 
+The SDK is **free** and needs **no license key** — in debug and release builds
+alike. (Upgrading from an earlier version? The `BGeoLicense` Info.plist key is
+no longer read; you can delete it.)
+
 ## Installation
 
 ### Swift Package Manager
@@ -35,7 +39,7 @@ The closed engine (`BGeoCore.xcframework`) is vendored in this repository, so
 there is nothing else to download, no checksum to keep in step, and no release
 asset that can go missing years from now. It costs roughly 0.9 MB of git
 history per engine release — a deliberate trade for the simplest possible
-consumer story. Full documentation: <https://bgeo.dev/docs/?utm_source=github&utm_medium=readme&utm_campaign=ios>.
+consumer story. Full documentation: <https://bgeo.dev/docs/>.
 
 ### Toolchain requirement
 
@@ -49,8 +53,8 @@ The floor moves with each engine release — it is whatever Xcode built the
 binary. `Frameworks/BGeoCore.xcframework/*/Modules/*.swiftmodule/*.swiftinterface`
 records it on the `swift-compiler-version` line, and CI checks it explicitly.
 
-If that floor is too high for your team, the [React Native](https://bgeo.dev/docs/react-native/?utm_source=github&utm_medium=readme&utm_campaign=ios)
-and [Flutter](https://bgeo.dev/docs/flutter/?utm_source=github&utm_medium=readme&utm_campaign=ios) SDKs ship the same engine and are
+If that floor is too high for your team, the [React Native](https://bgeo.dev/docs/react-native/)
+and [Flutter](https://bgeo.dev/docs/flutter/) SDKs ship the same engine and are
 not affected — their binary is consumed through a bridge built against your own
 toolchain.
 
@@ -100,25 +104,6 @@ of its keys:
     <string>Precise location improves your trip route.</string>
 </dict>
 ```
-
-## Licence key
-
-The licence key is **not** a `Config` option. Set it in your app's
-`Info.plist`:
-
-```xml
-<key>BGeoLicense</key>
-<string>BGEO1.your-license-token-here</string>
-```
-
-It's read once, at launch, before any other API on this package is used.
-
-In a RELEASE build, a missing or invalid key makes `ready()`/`start()` throw a
-`LICENSE_*` error. **Debuggable builds and the iOS Simulator always run
-unlicensed (evaluation mode), regardless of the key's presence or validity** —
-if tracking works fine in Debug but you're unsure whether your licence key is
-actually wired up correctly, that's why: test the key in a Release build on a
-device.
 
 ## Quickstart
 
@@ -170,11 +155,15 @@ xcodebuild test -scheme BackgroundGeolocation \
 (Substitute whatever simulator you have installed — `xcrun simctl list
 devices available` shows your options.)
 
+## Support
+
+Questions and bug reports: [GitHub Issues](https://github.com/dc-bgeo/ios-background-geolocation/issues).
+
 ## License
 
 The Swift facade (`Sources/`, `Tests/`, `Package.swift`, `Example/`) is
 **MIT** — see [`LICENSE`](./LICENSE).
 
-The precompiled engine (`Frameworks/BGeoCore.xcframework`) is **proprietary**
-and requires a license key in release builds — see
+The precompiled engine (`Frameworks/BGeoCore.xcframework`) is closed-source but
+**free to use** — no license key, registration or payment — see
 [`LICENSE-BINARY.md`](./LICENSE-BINARY.md).

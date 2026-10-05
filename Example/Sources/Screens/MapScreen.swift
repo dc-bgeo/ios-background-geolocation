@@ -208,15 +208,14 @@ public enum GeofenceColors {
 // of this file so it stays independently testable and this file stops
 // growing. See that file's header for why the type/method names were kept
 // as-is rather than renamed to the task-7 brief's `History.locations(range:)`
-// paraphrase. This screen calls the exact same `HistoryLoader.load`/
-// `filterPointsByRange`/`point(fromServerJSON:)` it always has.
+// paraphrase. This screen calls `HistoryLoader.filterPointsByRange` over the
+// local session buffer.
 
 // MARK: - Screen
 
 public struct MapScreen: View {
     @ObservedObject private var appStore: AppStore
     @ObservedObject private var themeStore: ThemeStore
-    private let deviceLink: DeviceLink
     private let onGeofenceRequest: (GeofenceRequest) -> Void
 
     @Environment(\.colorScheme) private var systemColorScheme
@@ -224,12 +223,10 @@ public struct MapScreen: View {
     public init(
         appStore: AppStore,
         themeStore: ThemeStore,
-        deviceLink: DeviceLink,
         onGeofenceRequest: @escaping (GeofenceRequest) -> Void = { _ in }
     ) {
         self.appStore = appStore
         self.themeStore = themeStore
-        self.deviceLink = deviceLink
         self.onGeofenceRequest = onGeofenceRequest
     }
 
@@ -396,7 +393,7 @@ public struct MapScreen: View {
         guard fromDraft != nil || toDraft != nil else { return }
         loading = true
         follow = false
-        let points = await HistoryLoader.load(from: fromDraft, to: toDraft, linked: appStore.link.linked, localPoints: appStore.points, deviceLink: deviceLink)
+        let points = HistoryLoader.filterPointsByRange(appStore.points, from: fromDraft, to: toDraft)
         historyPoints = points
         loading = false
         page = 0
@@ -433,19 +430,10 @@ public struct MapScreen: View {
             Circle()
                 .fill(appStore.status.ready ? (appStore.status.enabled ? colors.success : colors.textDim) : colors.warning)
                 .frame(width: 10, height: 10)
-            Text(appStore.link.linked ? "linked" : "not linked")
+            Text(appStore.status.enabled ? "enabled" : "disabled")
                 .font(.system(size: 14, weight: .bold, design: .monospaced))
                 .foregroundColor(colors.text)
                 .layoutPriority(1)
-            if appStore.link.linked, let deviceId = appStore.link.deviceId {
-                // The only item here left compressible (no `layoutPriority`):
-                // when the row runs out of width the device id truncates,
-                // instead of every label wrapping mid-word onto a second line.
-                Text(String(deviceId.prefix(8)))
-                    .font(.system(size: 13, design: .monospaced))
-                    .foregroundColor(colors.textDim)
-                    .truncationMode(.tail)
-            }
             Spacer(minLength: 4)
             Text("● \(appStore.status.isMoving ? "moving" : "stationary")")
                 .font(.system(size: 13, weight: .semibold, design: .monospaced))

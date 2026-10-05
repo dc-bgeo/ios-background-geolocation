@@ -1,6 +1,5 @@
-// Keep the app store and the web console in sync with the SDK's geofence set
-// (the device is the source of truth). Call after every CRUD operation and on
-// onGeofencesChange.
+// Keep the app store in sync with the SDK's geofence set (the device is the
+// source of truth). Call after every CRUD operation and on onGeofencesChange.
 //
 // Swift port of `react-native/example/src/geofences.ts`; `flutter/example/lib/
 // src/geofences.dart` is the same port for Flutter. `geofences.ts` itself is
@@ -26,14 +25,12 @@ import BackgroundGeolocation
 @MainActor
 public final class Geofences {
     private let store: AppStore
-    private let deviceLink: DeviceLink
 
     /// Test seams: `BackgroundGeolocation` is a `@MainActor` enum with static
-    /// members, so — same reasoning as `DeviceLink.applyConfig` — it can't be
-    /// swapped for a fake directly. Each seam is `throws` even where the
-    /// production closure never actually throws (`removeGeofence`/
-    /// `removeGeofences`), so a test can inject a failure for any of the
-    /// three CRUD paths and assert the snapshot push is skipped — the same
+    /// members, so it can't be swapped for a fake directly. Each seam is
+    /// `throws` even where the production closure never actually throws
+    /// (`removeGeofence`/`removeGeofences`), so a test can inject a failure
+    /// for any of the three CRUD paths and assert the refresh is skipped — the same
     /// defensive try/catch shape `GeofenceFormScreen.tsx` wraps around every
     /// one of these calls, not just `addGeofence`.
     var addGeofenceCall: (Geofence) async throws -> Void = { try await BackgroundGeolocation.addGeofence($0) }
@@ -41,37 +38,18 @@ public final class Geofences {
     var removeGeofencesCall: () async throws -> Void = { await BackgroundGeolocation.removeGeofences() }
     var getGeofencesCall: () async -> [Geofence] = { await BackgroundGeolocation.getGeofences() }
 
-    public init(store: AppStore, deviceLink: DeviceLink) {
+    public init(store: AppStore) {
         self.store = store
-        self.deviceLink = deviceLink
     }
 
-    /// `geofences.ts`'s `syncGeofences`: read the SDK's current set, update
-    /// the store, mirror the snapshot to the console. `putGeofences` is a
-    /// no-op (returns false) when not linked.
-    ///
-    /// The RN original discards that result; this port logs it instead. A
-    /// rejected PUT (not linked, expired tokens, server down) is otherwise
-    /// completely invisible — the fence is on the device and drawn on the map,
-    /// the console just never hears about it, and there is nothing anywhere to
-    /// say so.
+    /// `geofences.ts`'s `syncGeofences`: read the SDK's current set and
+    /// update the store.
     public func refresh() async {
-        let geofences = await getGeofencesCall()
-        store.setGeofences(geofences)
-        let pushed = await deviceLink.putGeofences(geofences)
-        LogUploader.logEvent(
-            "putGeofences",
-            message: pushed
-                ? "\(geofences.count) mirrored to console"
-                : "console not updated (\(geofences.count) local)",
-            level: pushed ? .info : .warn,
-            store: store
-        )
+        store.setGeofences(await getGeofencesCall())
     }
 
     /// Add a geofence, then sync. A failed SDK call rethrows without ever
-    /// calling `refresh()` — the console must not learn about a fence the
-    /// device doesn't actually have.
+    /// calling `refresh()`.
     public func add(_ geofence: Geofence) async throws {
         try await addGeofenceCall(geofence)
         await refresh()

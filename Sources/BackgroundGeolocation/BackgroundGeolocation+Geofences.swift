@@ -5,15 +5,13 @@ import Foundation
 extension BackgroundGeolocation {
 
     /// Delegates to `addGeofences` with a one-element array rather than
-    /// duplicating the license-gated add logic
-    /// (`RNBackgroundGeolocation.mm:336-345`).
+    /// duplicating the add logic (`RNBackgroundGeolocation.mm:336-345`).
     public static func addGeofence(_ geofence: Geofence) async throws {
         try await addGeofences([geofence])
     }
 
-    /// The engine gates the license here: a non-nil return can be a
-    /// `LICENSE_*` code as well as `INVALID_GEOFENCE`
-    /// (`RNBackgroundGeolocation.mm:347-365`) — surfaced verbatim.
+    /// A non-nil engine return (e.g. `INVALID_GEOFENCE`) is surfaced
+    /// verbatim as a `BGeoError` (`RNBackgroundGeolocation.mm:347-365`).
     public static func addGeofences(_ geofences: [Geofence]) async throws {
         if let code = engine.addGeofences(geofences.map { $0.toDictionary() }) {
             throw BGeoError(code: code, message: "geofence request rejected (\(code))")

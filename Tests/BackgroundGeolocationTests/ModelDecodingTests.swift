@@ -253,11 +253,11 @@ final class ModelDecodingTests: XCTestCase {
     }
 
     func testLocationErrorEventDecodesAStringCode() {
-        // The license-refusal (BGGeoEngine.mm:2654) and watch-tick-failure
-        // (:2689) paths emit `code` as a String.
-        let event = LocationErrorEvent(dictionary: ["code": "LICENSE_EXPIRED", "message": "Tracking is not licensed"])
-        XCTAssertEqual(event?.code, "LICENSE_EXPIRED")
-        XCTAssertEqual(event?.message, "Tracking is not licensed")
+        // The watch-tick-failure path (BGGeoEngine.mm:2689) emits `code` as
+        // a String.
+        let event = LocationErrorEvent(dictionary: ["code": "408", "message": "Location request timed out"])
+        XCTAssertEqual(event?.code, "408")
+        XCTAssertEqual(event?.message, "Location request timed out")
     }
 
     func testLocationErrorEventDecodesAnNSNumberCodeAsItsIntegerString() {

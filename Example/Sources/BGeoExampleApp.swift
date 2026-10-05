@@ -1,12 +1,12 @@
 // App entry point: wires the SDK end to end before any screen renders.
 //
 // Ordering mirrors `react-native/example/App.tsx`'s `useEffect` line for
-// line: event subscriptions are opened FIRST, then the persisted device link
-// is restored, then `ready(config)` brings the engine up. This order matters:
+// line: event subscriptions are opened FIRST, then `ready(config)` brings the
+// engine up. This order matters:
 // `EventHub` buffers up to 64 events per event name until a subscriber
 // attaches, then LATCHES for that name — one buffered replay, delivered to
 // whichever subscriber attaches first, never re-armed. Subscribing after
-// `ready()`/`restore()`'s `setConfig` risks losing launch-time events
+// `ready()` risks losing launch-time events
 // (CoreLocation's initial `didChangeAuthorization`, an early
 // `providerchange`) if more than 64 arrive first; subscribing before costs
 // nothing, since the hub simply queues events for a name with no subscriber
@@ -25,8 +25,7 @@ private let baseConfig = Config(
     stopOnTerminate: true,
     startOnBoot: false,
     debug: true,
-    // Native logger at INFO for the example app; upload starts once a device
-    // link supplies `logUrl` (`DeviceLink`'s `applySdkConfig`).
+    // Native logger at INFO for the example app.
     logLevel: 3
 )
 
@@ -35,29 +34,25 @@ struct BGeoExampleApp: App {
     @StateObject private var appStore: AppStore
     @StateObject private var themeStore: ThemeStore
     @StateObject private var configStore: ConfigStore
-    private let deviceLink: DeviceLink
     private let geofences: Geofences
 
     /// Guards `bootstrap()` against running twice. Unreachable today (one
     /// `WindowGroup`), but `TARGETED_DEVICE_FAMILY: "1,2"` invites iPad, and a
     /// second scene's `.task` re-running `bootstrap()` would re-subscribe
     /// every event (doubling delivery, since `subscribeToEvents()`'s
-    /// `Subscription`s are never removed) and call `ready()`/`restore()`
-    /// again. `static` so it survives across scenes, which are separate
+    /// `Subscription`s are never removed) and call `ready()` again. `static` so it survives across scenes, which are separate
     /// `WindowGroup` instances within the same process, not separate apps.
     @MainActor private static var hasBootstrapped = false
 
     init() {
-        // `DeviceLink`/`Geofences` need the SAME `AppStore` instance the view
-        // hierarchy observes, so it's built here (not via `AppStore()` a
-        // second time) and handed to `_appStore`'s `StateObject` wrapper.
+        // `Geofences` needs the SAME `AppStore` instance the view hierarchy
+        // observes, so it's built here (not via `AppStore()` a second time)
+        // and handed to `_appStore`'s `StateObject` wrapper.
         let appStore = AppStore()
-        let deviceLink = DeviceLink(store: appStore)
         _appStore = StateObject(wrappedValue: appStore)
         _themeStore = StateObject(wrappedValue: ThemeStore())
         _configStore = StateObject(wrappedValue: ConfigStore())
-        self.deviceLink = deviceLink
-        self.geofences = Geofences(store: appStore, deviceLink: deviceLink)
+        self.geofences = Geofences(store: appStore)
     }
 
     var body: some Scene {
@@ -66,7 +61,6 @@ struct BGeoExampleApp: App {
                 appStore: appStore,
                 themeStore: themeStore,
                 configStore: configStore,
-                deviceLink: deviceLink,
                 geofences: geofences
             )
             .task { await bootstrap() }
@@ -80,7 +74,6 @@ struct BGeoExampleApp: App {
         Self.hasBootstrapped = true
 
         subscribeToEvents()
-        _ = await deviceLink.restore()
 
         let config = configStore.merged(into: baseConfig)
         do {
@@ -149,12 +142,10 @@ struct BGeoExampleApp: App {
         BackgroundGeolocation.onAuthorization { event in
             let failed = (event["success"] as? Bool) == false
             // The raw event is `{success, accessToken, refreshToken}` — live
-            // JWTs. `redactedAuthorizationLogData` strips them to a
-            // token-presence signal before this goes anywhere near the Logs
-            // screen/`bgeo.db`/`/device/logs`; the real event (with the real
-            // tokens) still goes to `persistRotatedTokens` below.
+            // JWTs when an app configures `authorization`.
+            // `redactedAuthorizationLogData` strips them to a token-presence
+            // signal before this goes anywhere near the Logs screen/`bgeo.db`.
             log("onAuthorization", failed ? "failed" : "refreshed", data: redactedAuthorizationLogData(event), failed ? .error : .info)
-            Task { await deviceLink.persistRotatedTokens(event) }
         }
 
         BackgroundGeolocation.onGeofence { event in
@@ -191,8 +182,8 @@ struct BGeoExampleApp: App {
         // key-based — `redactedAuthorizationLogData` above recognises a
         // credential by the name of the key holding it. `responseText` is one
         // opaque string with no internal keys, so a token echoed back by a
-        // server inside an error body would land in the Logs screen and
-        // `/device/logs` untouched. That is a limit of the by-key approach,
+        // server inside an error body would land in the Logs screen
+        // untouched. That is a limit of the by-key approach,
         // not a gap in its implementation, and it has never been claimed as
         // covered — the server side is what keeps it true.
         BackgroundGeolocation.onHttp { event in
@@ -212,7 +203,7 @@ struct BGeoExampleApp: App {
 
 /// Redacts an `onAuthorization` event (`{success, accessToken, refreshToken}`,
 /// per `BGGeoEngine.mm`'s authorization body) down to `success` plus
-/// token-presence booleans, for the Logs screen/`bgeo.db`/`/device/logs` —
+/// token-presence booleans, for the Logs screen/`bgeo.db` —
 /// none of which should ever see a live JWT. Free function (not a private
 /// method) so it's reachable from tests via `@testable import`.
 func redactedAuthorizationLogData(_ event: [String: Any]) -> [String: Any] {

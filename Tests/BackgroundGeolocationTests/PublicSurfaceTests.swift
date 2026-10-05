@@ -62,11 +62,11 @@ final class PublicSurfaceTests: XCTestCase {
     // MARK: - BGeoError
 
     func testBGeoErrorPublicInitAndAccessors() {
-        let error = BGeoError(code: "LICENSE_INVALID", message: "bad key")
-        XCTAssertEqual(error.code, "LICENSE_INVALID")
-        XCTAssertEqual(error.message, "bad key")
-        XCTAssertEqual(error.errorDescription, "LICENSE_INVALID: bad key")
-        XCTAssertEqual(error, BGeoError.licenseInvalid(message: "bad key"))
+        let error = BGeoError(code: "INVALID_GEOFENCE", message: "bad radius")
+        XCTAssertEqual(error.code, "INVALID_GEOFENCE")
+        XCTAssertEqual(error.message, "bad radius")
+        XCTAssertEqual(error.errorDescription, "INVALID_GEOFENCE: bad radius")
+        XCTAssertEqual(error, BGeoError.invalidGeofence(message: "bad radius"))
 
         let unknown = BGeoError(code: "SOMETHING_NEW", message: "m")
         XCTAssertEqual(unknown, BGeoError.unknown(code: "SOMETHING_NEW", message: "m"))
@@ -308,9 +308,9 @@ final class PublicSurfaceTests: XCTestCase {
     }
 
     func testLocationErrorEventPublicInit() {
-        let event = LocationErrorEvent(dictionary: ["code": "LICENSE_EXPIRED", "message": "Tracking is not licensed"])
-        XCTAssertEqual(event?.code, "LICENSE_EXPIRED")
-        XCTAssertEqual(event?.message, "Tracking is not licensed")
+        let event = LocationErrorEvent(dictionary: ["code": "408", "message": "Location request timed out"])
+        XCTAssertEqual(event?.code, "408")
+        XCTAssertEqual(event?.message, "Location request timed out")
     }
 
     func testHttpEventPublicInit() {

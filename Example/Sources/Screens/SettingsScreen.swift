@@ -1,11 +1,11 @@
-// Settings — device link (registration code), every working SDK config key
-// (applied immediately via ConfigStore, persisted as overrides), engine
+// Settings — every working SDK config key (applied immediately via
+// ConfigStore, persisted as overrides), engine
 // state/diagnostic actions and the upload-queue tools.
 //
 // Swift port of `react-native/example/src/screens/SettingsScreen.tsx`
 // (`flutter/example/lib/src/screens/settings_screen.dart` is the same port
 // for Flutter). RN's actual Settings screen: `destroyLocations`, `getCount`,
-// `getLog`, `getState`, `resetOdometer`, `sync`, `uploadLog`, link/unlink —
+// `getLog`, `getState`, `resetOdometer`, `sync`, `uploadLog` —
 // `requestPermission`/`getCurrentPosition`/`start`/`stop` live on RN's Map
 // screen instead (Task 5 owns those, for parity with exactly one button per
 // call across the app). Coordinator-confirmed ruling on the brief's original
@@ -16,9 +16,8 @@
 // getCurrentPosition would have.
 //
 // Wiring note (Task 8's job, not this one — see that task's brief): this
-// view takes its `AppStore`/`ConfigStore`/`ThemeStore`/`DeviceLink`
-// dependencies through its initializer, the same explicit-injection pattern
-// `DeviceLink` itself uses; nothing here assumes an `@EnvironmentObject`.
+// view takes its `AppStore`/`ConfigStore`/`ThemeStore` dependencies through
+// its initializer; nothing here assumes an `@EnvironmentObject`.
 // `ContentView`/`BGeoExampleApp` don't construct or present this screen yet.
 
 import SwiftUI
@@ -39,7 +38,6 @@ public struct SettingsScreen: View {
     @ObservedObject private var appStore: AppStore
     @ObservedObject private var configStore: ConfigStore
     @ObservedObject private var themeStore: ThemeStore
-    private let deviceLink: DeviceLink
 
     @Environment(\.colorScheme) private var systemColorScheme
     // Per-field commit error, rendered adjacent to the field that failed
@@ -57,11 +55,10 @@ public struct SettingsScreen: View {
     // adjacent placement doesn't apply the same way it does to a field edit.
     @SwiftUI.State private var resetError: String?
 
-    public init(appStore: AppStore, configStore: ConfigStore, themeStore: ThemeStore, deviceLink: DeviceLink) {
+    public init(appStore: AppStore, configStore: ConfigStore, themeStore: ThemeStore) {
         self.appStore = appStore
         self.configStore = configStore
         self.themeStore = themeStore
-        self.deviceLink = deviceLink
     }
 
     private var scheme: Scheme {
@@ -77,7 +74,6 @@ public struct SettingsScreen: View {
     public var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 0) {
-                LinkSection(appStore: appStore, deviceLink: deviceLink, colors: colors)
                 AppearanceSection(themeStore: themeStore, colors: colors, schemeLabel: scheme.rawValue)
 
                 ForEach(configSections, id: \.title) { section in
@@ -136,11 +132,10 @@ public struct SettingsScreen: View {
         configStore.overrides[field.key] ?? field.defaultValue.any
     }
 
-    /// Mirrors `LinkSection.link()`'s error handling: log the event only on
-    /// success (never claim a rejected `setConfig` "worked"), and surface a
-    /// failure inline the same way a failed link does — no log call on that
-    /// path either, since `ConfigStore.setOverride` guarantees a throw left
-    /// no persisted override behind.
+    /// Log the event only on success (never claim a rejected `setConfig`
+    /// "worked"), and surface a failure inline — no log call on that path,
+    /// since `ConfigStore.setOverride` guarantees a throw left no persisted
+    /// override behind.
     private func setValue(_ field: ConfigField, _ raw: Any) {
         Task {
             do {
@@ -176,7 +171,7 @@ private struct AppearanceSection: View {
             HStack {
                 VStack(alignment: .leading, spacing: 2) {
                     Text("Theme").font(.system(size: 13)).foregroundColor(colors.text2)
-                    Text("same palette as the web console · now: \(schemeLabel)")
+                    Text("now: \(schemeLabel)")
                         .font(.system(size: 11)).foregroundColor(colors.placeholder)
                 }
                 Spacer()
@@ -196,93 +191,6 @@ private struct AppearanceSection: View {
         case .system: return "System"
         case .light: return "Light"
         case .dark: return "Dark"
-        }
-    }
-}
-
-// MARK: - device link
-
-private struct LinkSection: View {
-    @ObservedObject var appStore: AppStore
-    let deviceLink: DeviceLink
-    let colors: ThemeColors
-
-    @SwiftUI.State private var serverUrl: String
-    @SwiftUI.State private var code = ""
-    @SwiftUI.State private var busy = false
-    @SwiftUI.State private var error: String?
-
-    init(appStore: AppStore, deviceLink: DeviceLink, colors: ThemeColors) {
-        self.appStore = appStore
-        self.deviceLink = deviceLink
-        self.colors = colors
-        _serverUrl = State(initialValue: appStore.link.serverUrl)
-    }
-
-    private var codeReady: Bool {
-        code.replacingOccurrences(of: "-", with: "").count >= 8
-    }
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text("Debug console").font(.system(size: 16, weight: .bold)).foregroundColor(colors.text)
-            Text("Create a registration code in the BGeo web console (Dashboard → Registration codes) and enter it here. Locations and SDK events then stream live to your console.")
-                .font(.system(size: 13)).foregroundColor(colors.textDim)
-
-            Text("Server").font(.system(size: 12)).foregroundColor(colors.textDim)
-            TextField("", text: $serverUrl)
-                .disabled(appStore.link.linked)
-                .textFieldFieldStyle(colors: colors)
-
-            if !appStore.link.linked {
-                Text("Registration code").font(.system(size: 12)).foregroundColor(colors.textDim)
-                TextField("XXXX-XXXX", text: $code)
-                    .textInputAutocapitalization(.characters)
-                    .disableAutocorrection(true)
-                    .textFieldFieldStyle(colors: colors)
-
-                Button(busy ? "Linking…" : "Link device") { link() }
-                    .disabled(busy || !codeReady)
-                    .opacity(busy || !codeReady ? 0.5 : 1)
-                    .buttonStyle(FilledButtonStyle(kind: .primary, colors: colors))
-            } else {
-                Text("🟢 Linked — device \(String((appStore.link.deviceId ?? "").prefix(8)))")
-                    .font(.system(size: 14)).foregroundColor(colors.successText)
-                Button("Unlink") { unlink() }
-                    .disabled(busy)
-                    .opacity(busy ? 0.5 : 1)
-                    .buttonStyle(FilledButtonStyle(kind: .danger, colors: colors))
-            }
-
-            if let error {
-                Text(error).font(.system(size: 13)).foregroundColor(colors.dangerText)
-            }
-        }
-        .padding(.bottom, 24)
-    }
-
-    private func link() {
-        busy = true
-        error = nil
-        Task {
-            do {
-                let trimmed = serverUrl.trimmingTrailingSlashes()
-                let result = try await deviceLink.link(serverUrl: trimmed, code: code)
-                LogUploader.logEvent("link", message: "linked to console as \(result.deviceId)", level: .info, store: appStore)
-                code = ""
-            } catch {
-                self.error = error.localizedDescription
-            }
-            busy = false
-        }
-    }
-
-    private func unlink() {
-        busy = true
-        Task {
-            await deviceLink.unlink()
-            LogUploader.logEvent("link", message: "unlinked from console", level: .info, store: appStore)
-            busy = false
         }
     }
 }
@@ -688,25 +596,5 @@ private struct FilledButtonStyle: ButtonStyle {
         case .primary, .danger: return colors.onAccent
         case .neutral: return colors.text
         }
-    }
-}
-
-// MARK: - small helpers
-
-private extension View {
-    func textFieldFieldStyle(colors: ThemeColors) -> some View {
-        self
-            .padding(12)
-            .background(colors.field)
-            .foregroundColor(colors.text2)
-            .overlay(RoundedRectangle(cornerRadius: 8).stroke(colors.border))
-    }
-}
-
-private extension String {
-    func trimmingTrailingSlashes() -> String {
-        var result = self
-        while result.hasSuffix("/") { result.removeLast() }
-        return result
     }
 }

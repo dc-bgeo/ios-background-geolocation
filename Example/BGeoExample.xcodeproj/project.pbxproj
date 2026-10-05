@@ -18,7 +18,6 @@
 		32FE83F353FB0033CD3926A9 /* ConfigStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B87A0A087DF92AC22E223091 /* ConfigStoreTests.swift */; };
 		386ECF993F5FE5D22C5F0486 /* CoordinatesSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABBE36A8D7D4E1B24D575E23 /* CoordinatesSheet.swift */; };
 		3A952170454C37FB5D7E69C8 /* ConfigSchema.swift in Sources */ = {isa = PBXBuildFile; fileRef = 108D5563D0235EE6CC60CFED /* ConfigSchema.swift */; };
-		4FA4C7DF1EEE928C1BFEFC78 /* DeviceLink.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16FC9792B1EBC49DB0AA810 /* DeviceLink.swift */; };
 		5818518C342F36421EE4CA2A /* DotMarker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7867765F0B39CAD59352C317 /* DotMarker.swift */; };
 		5842E7C914B8E9E2BAFE0391 /* History.swift in Sources */ = {isa = PBXBuildFile; fileRef = 101E78DFA62C143CE081AB17 /* History.swift */; };
 		5BA63FE49AFC6376105FCAB4 /* AppStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 25EA6ACFEA6AC88E3C65DE9A /* AppStore.swift */; };
@@ -27,7 +26,6 @@
 		9C88A99E26F17396D62D1285 /* GeofencesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9726008A851B665B55E28C7 /* GeofencesTests.swift */; };
 		A4BCE2DA8364FBA0B757D593 /* SettingsScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5FE8925C4AAD9709F0DBC08C /* SettingsScreen.swift */; };
 		AAD6F59B9694134B65A2311D /* SettingsScreenTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C6A59ED1E410579DFA57EE98 /* SettingsScreenTests.swift */; };
-		ACD22312CB18D78B6A5313D4 /* DeviceLinkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E11AEEB24B489F3616E996EE /* DeviceLinkTests.swift */; };
 		AD9983F89845730E318424E8 /* MapScreenLogicTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1CED8223176FC14E7C274AC6 /* MapScreenLogicTests.swift */; };
 		C60E0FC6058ABFEE617A1791 /* Geofences.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CFC7825A9912746D83FA339 /* Geofences.swift */; };
 		D41FDA3E0AE42A5C43414B8F /* MapScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 16DE4D3F6CC72A6529C5487E /* MapScreen.swift */; };
@@ -75,10 +73,8 @@
 		B328A65815E7DB66228D795D /* BGeoExample.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = BGeoExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B87A0A087DF92AC22E223091 /* ConfigStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConfigStoreTests.swift; sourceTree = "<group>"; };
 		B9726008A851B665B55E28C7 /* GeofencesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeofencesTests.swift; sourceTree = "<group>"; };
-		C16FC9792B1EBC49DB0AA810 /* DeviceLink.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceLink.swift; sourceTree = "<group>"; };
 		C6A59ED1E410579DFA57EE98 /* SettingsScreenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsScreenTests.swift; sourceTree = "<group>"; };
 		C7FB4A6A1BE60B4B1240020E /* BGeoExampleAppTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BGeoExampleAppTests.swift; sourceTree = "<group>"; };
-		E11AEEB24B489F3616E996EE /* DeviceLinkTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceLinkTests.swift; sourceTree = "<group>"; };
 		E7EF06EE3330294C23DD6490 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		FAEDC4B6ED19038DC4D1149C /* LogsScreenTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogsScreenTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -101,7 +97,6 @@
 				6402B0CDB3E8D7141A4691FF /* AppStoreTests.swift */,
 				C7FB4A6A1BE60B4B1240020E /* BGeoExampleAppTests.swift */,
 				B87A0A087DF92AC22E223091 /* ConfigStoreTests.swift */,
-				E11AEEB24B489F3616E996EE /* DeviceLinkTests.swift */,
 				B9726008A851B665B55E28C7 /* GeofencesTests.swift */,
 				908A974D7FD3E6FCBE2AA166 /* HistoryTests.swift */,
 				FAEDC4B6ED19038DC4D1149C /* LogsScreenTests.swift */,
@@ -168,7 +163,6 @@
 				108D5563D0235EE6CC60CFED /* ConfigSchema.swift */,
 				14567306709C0719C5673026 /* ConfigStore.swift */,
 				E7EF06EE3330294C23DD6490 /* ContentView.swift */,
-				C16FC9792B1EBC49DB0AA810 /* DeviceLink.swift */,
 				9CFC7825A9912746D83FA339 /* Geofences.swift */,
 				101E78DFA62C143CE081AB17 /* History.swift */,
 				7DABB4ED5DAE216C36C7CA38 /* Images.xcassets */,
@@ -275,7 +269,6 @@
 				EC2B410F62061A94CA0D9DE0 /* AppStoreTests.swift in Sources */,
 				1464C9506D7AA73518B3C057 /* BGeoExampleAppTests.swift in Sources */,
 				32FE83F353FB0033CD3926A9 /* ConfigStoreTests.swift in Sources */,
-				ACD22312CB18D78B6A5313D4 /* DeviceLinkTests.swift in Sources */,
 				9C88A99E26F17396D62D1285 /* GeofencesTests.swift in Sources */,
 				F01386B05FDA39F250E1C37C /* HistoryTests.swift in Sources */,
 				E58EC40A6C7DE8AA2913B2FE /* LogUploaderTests.swift in Sources */,
@@ -296,7 +289,6 @@
 				23107B14C35308D53C827252 /* ContentView.swift in Sources */,
 				386ECF993F5FE5D22C5F0486 /* CoordinatesSheet.swift in Sources */,
 				0EBCD56F73C37C3064BC0D2A /* DateTimeField.swift in Sources */,
-				4FA4C7DF1EEE928C1BFEFC78 /* DeviceLink.swift in Sources */,
 				5818518C342F36421EE4CA2A /* DotMarker.swift in Sources */,
 				8DC44BB2657F8C1B4AD2E7B9 /* GeofenceFormScreen.swift in Sources */,
 				C60E0FC6058ABFEE617A1791 /* Geofences.swift in Sources */,

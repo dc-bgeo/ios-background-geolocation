@@ -429,7 +429,7 @@ final class ConfigStoreTests: XCTestCase {
         let documentedExclusions: Set<String> = [
             "foregroundService", "backgroundPermissionRationale", // documented no-ops
             "locationAuthorizationAlert", "headers", "params", "extras", // dictionary types
-            "url", "logUrl", "authorization", // DeviceLink-owned
+            "url", "logUrl", "authorization", // upload endpoint + credentials, set in code
         ]
 
         let uncovered = configPropertyNames.subtracting(schemaPropertyNames).subtracting(documentedExclusions)

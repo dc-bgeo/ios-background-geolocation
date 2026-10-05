@@ -13,7 +13,6 @@ struct ContentView: View {
     @ObservedObject var appStore: AppStore
     @ObservedObject var themeStore: ThemeStore
     @ObservedObject var configStore: ConfigStore
-    let deviceLink: DeviceLink
     let geofences: Geofences
 
     /// Set by `MapScreen`'s `onGeofenceRequest` (long-press on the map, or a
@@ -23,7 +22,7 @@ struct ContentView: View {
 
     var body: some View {
         TabView {
-            MapScreen(appStore: appStore, themeStore: themeStore, deviceLink: deviceLink) { request in
+            MapScreen(appStore: appStore, themeStore: themeStore) { request in
                 geofenceRequest = request
             }
             .tabItem { Label("Map", systemImage: "map") }
@@ -31,7 +30,7 @@ struct ContentView: View {
             LogsScreen(appStore: appStore, themeStore: themeStore)
                 .tabItem { Label("Logs", systemImage: "list.bullet") }
 
-            SettingsScreen(appStore: appStore, configStore: configStore, themeStore: themeStore, deviceLink: deviceLink)
+            SettingsScreen(appStore: appStore, configStore: configStore, themeStore: themeStore)
                 .tabItem { Label("Settings", systemImage: "gear") }
         }
         .sheet(isPresented: Binding(

@@ -47,18 +47,6 @@ final class FacadeGeofenceTests: XCTestCase {
         }
     }
 
-    func testAddGeofencesThrowsTheEnginesLicenseExpiredCode() async {
-        engine.stubbedAddGeofencesError = "LICENSE_EXPIRED"
-        do {
-            try await BackgroundGeolocation.addGeofences([home])
-            XCTFail("expected a rejection")
-        } catch let error as BGeoError {
-            XCTAssertEqual(error.code, "LICENSE_EXPIRED")
-        } catch {
-            XCTFail("expected BGeoError, got \(error)")
-        }
-    }
-
     // MARK: - removeGeofence / removeGeofences
 
     func testRemoveGeofenceDelegatesToTheEngine() async {

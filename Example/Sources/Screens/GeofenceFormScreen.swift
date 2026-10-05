@@ -1,7 +1,7 @@
 // Modal form for geofence CRUD. New fence: long-press on the map (Task 5's
 // `onGeofenceRequest` seam, `identifier: nil`). Edit/delete: tap an existing
 // fence's pin (`identifier` set). Every change goes to the SDK, then the
-// snapshot is mirrored to the console via `Geofences`.
+// app store is refreshed via `Geofences`.
 //
 // Swift port of `react-native/example/src/screens/GeofenceFormScreen.tsx`;
 // `flutter/example/lib/src/screens/geofence_form_screen.dart` is the same
@@ -142,9 +142,8 @@ public struct GeofenceFormScreen: View {
         var loiteringDelay: Double?
         if !trimmedLoitering.isEmpty {
             // Same guard as `radius` above: `Double("1e400")` returns
-            // `+infinity` rather than nil, and an infinite value reaching
-            // `JSONEncoder` inside `DeviceLink.deviceFetch`'s `try?` would
-            // make the geofence PUT go out with no body, silently.
+            // `+infinity` rather than nil, and an infinite loitering delay
+            // is not a meaningful value to hand the engine.
             guard let parsed = parseDouble(trimmedLoitering), parsed.isFinite else {
                 error = "loitering delay must be a finite number"
                 return

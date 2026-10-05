@@ -5,7 +5,7 @@ import XCTest
 /// dual-write behaviour ported from `logUploader.ts`: append to the app
 /// store's log buffer AND hand the same event to the SDK's log queue via the
 /// injectable `write` seam (real `BackgroundGeolocation.logger` calls are
-/// never exercised in a unit test — same reasoning as `DeviceLink.applyConfig`).
+/// never exercised in a unit test — same reasoning as `ConfigStore.applyConfig`).
 @MainActor
 final class LogUploaderTests: XCTestCase {
     private var originalWrite: ((LogLevel, String, [String: Any]) -> Void)!

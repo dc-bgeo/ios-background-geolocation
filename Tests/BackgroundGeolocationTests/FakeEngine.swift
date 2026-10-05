@@ -56,11 +56,6 @@ final class FakeEngine: Engine {
         appliedConfigs.append(config)
     }
 
-    var stubbedLicenseError: String?
-    func licenseErrorCode() -> String? {
-        stubbedLicenseError
-    }
-
     var stubbedState: [String: Any] = [:]
     func stateDictionary() -> [String: Any] {
         stubbedState

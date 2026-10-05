@@ -30,40 +30,28 @@ public enum BackgroundGeolocation {
     /// listener is registered — are dropped instead of buffered. `attach` is
     /// idempotent, so calling it here is harmless even if a subscriber (or a
     /// test) already attached the hub.
-    ///
-    /// Applies `config`, THEN checks the license — the engine reads the
-    /// license key out of the config it was just given, so a bad license
-    /// still leaves `config` applied (`RNBackgroundGeolocation.mm:115-127`).
     @discardableResult
     public static func ready(_ config: Config) async throws -> State {
         hub.attach(to: engine)
         engine.applyConfig(config.toDictionary())
-        if let code = engine.licenseErrorCode() {
-            throw licenseError(code)
-        }
         return State(dictionary: engine.stateDictionary())
     }
 
-    /// Applies `config` and resolves state. Unlike `ready`/`start`, this
-    /// never consults the license (`RNBackgroundGeolocation.mm:129-136`).
+    /// Applies `config` and resolves state (`RNBackgroundGeolocation.mm:129-136`).
     @discardableResult
     public static func setConfig(_ config: Config) async throws -> State {
         engine.applyConfig(config.toDictionary())
         return State(dictionary: engine.stateDictionary())
     }
 
-    /// Checks the license BEFORE starting tracking — a bad license must not
-    /// start tracking (`RNBackgroundGeolocation.mm:138-148`).
+    /// Starts tracking (`RNBackgroundGeolocation.mm:138-148`).
     @discardableResult
     public static func start() async throws -> State {
-        if let code = engine.licenseErrorCode() {
-            throw licenseError(code)
-        }
         engine.startTracking()
         return State(dictionary: engine.stateDictionary())
     }
 
-    /// Never consults the license (`RNBackgroundGeolocation.mm:150-155`).
+    /// Stops tracking (`RNBackgroundGeolocation.mm:150-155`).
     @discardableResult
     public static func stop() async throws -> State {
         engine.stopTracking()
@@ -309,8 +297,8 @@ public enum BackgroundGeolocation {
         }
     }
 
-    /// The only way to learn `startWatch` refused a bad license, or that a
-    /// watch tick failed — see `LocationErrorEvent`'s doc comment.
+    /// The only way to learn that a watch tick failed — see
+    /// `LocationErrorEvent`'s doc comment.
     @discardableResult
     public static func onLocationError(_ handler: @escaping (LocationErrorEvent) -> Void) -> Subscription {
         hub.subscribe("locationerror") { dictionary in
@@ -414,10 +402,6 @@ public enum BackgroundGeolocation {
     }
 
     // MARK: - Private helpers
-
-    private static func licenseError(_ code: String) -> BGeoError {
-        BGeoError(code: code, message: "BGeo license check failed (\(code))")
-    }
 
     private static func decodedLocation(_ dictionary: [String: Any]) throws -> Location {
         guard let location = Location(dictionary: dictionary) else {
